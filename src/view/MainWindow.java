@@ -10,15 +10,15 @@ import controller.Controller;
 public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 3172688540921699213L;
 
-	private Controller model;
+	private Controller controller;
 	
 	private CPlusPlusWindow cPlusPlusWindow;
 	private PythonWindow pythonWindow;
 	private ErrorWindow errorWindow;
 
-	public MainWindow(Controller model) {
+	public MainWindow(Controller controller) {
 		// 600
-		this.model = model;
+		this.controller = controller;
 		setSize(1000, 400);
 		setResizable(false);
 		setTitle("Python -> C++ Translator");
@@ -37,7 +37,7 @@ public class MainWindow extends JFrame {
 		pythonWindow.requestFocus();
 	}
 
-	public void processText(String text) {
-		model.processText(text);
+	public void processText(String text, int number) {
+		controller.processText(text, number);
 	}
 }

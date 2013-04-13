@@ -13,12 +13,11 @@ import javax.swing.KeyStroke;
 
 public class PythonWindow extends JPanel {
 	private static final long serialVersionUID = 4621872062044006076L;
-
-	int i = 0;
+	
+	
 	MainWindow mainWindow;
 	JTextArea pythonTextArea;
 	int numberOfTabsInLine = 0;
-
 
 	public PythonWindow(MainWindow mainWindow) {
 		this.mainWindow = mainWindow;
@@ -37,7 +36,6 @@ public class PythonWindow extends JPanel {
 
 	public void processTab() {
 		numberOfTabsInLine++;
-		System.out.println(numberOfTabsInLine);
 		pythonTextArea.append("      ");
 	}
 
@@ -45,43 +43,20 @@ public class PythonWindow extends JPanel {
 		String s = pythonTextArea.getText();
 		pythonTextArea.setText("");
 		StringBuilder builder = new StringBuilder();
-		System.out.println(s);
+
+		boolean flague = false;
 		for (char c : s.toCharArray()) {
-			if (c == ' ')
+			if (c == ' ' && !flague)
 				continue;
-			else if (c == '\t')
-				continue;
-			else
+			else {
+				flague = true;
 				builder.append(c);
+			}
 		}
-		System.out.println(numberOfTabsInLine + builder.toString());
 
 		numberOfTabsInLine = 0;
-		
-		mainWindow.processText(builder.toString());
-	}
 
-	public void keyPressed(KeyEvent e) {
-
-		if (e.getKeyChar() == KeyEvent.VK_TAB) {
-
-		}
-		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-			String s = pythonTextArea.getText();
-			pythonTextArea.setText("");
-			pythonTextArea = new JTextArea();
-			StringBuilder builder = new StringBuilder();
-			System.out.println(s);
-			for (char c : s.toCharArray()) {
-				if (c == ' ')
-					continue;
-				else if (c == '\t')
-					continue;
-				else
-					builder.append(c);
-			}
-			System.out.println(numberOfTabsInLine + builder.toString());
-		}
+		mainWindow.processText(builder.toString(), numberOfTabsInLine);
 	}
 
 	public void addKeyBindings() {
