@@ -1,25 +1,129 @@
 package view;
 
 import java.awt.Dimension;
+import java.awt.event.ActionEvent;
+import java.awt.event.KeyEvent;
 
+import javax.swing.AbstractAction;
+import javax.swing.ActionMap;
+import javax.swing.InputMap;
 import javax.swing.JPanel;
 import javax.swing.JTextArea;
+import javax.swing.KeyStroke;
 
 public class PythonWindow extends JPanel {
 	private static final long serialVersionUID = 4621872062044006076L;
 
+	int i = 0;
 	MainWindow mainWindow;
+	JTextArea pythonTextArea;
+	int numberOfTabsInLine = 0;
 
-	public PythonWindow() {
-
-	}
 
 	public PythonWindow(MainWindow mainWindow) {
 		this.mainWindow = mainWindow;
+
+		pythonTextArea = new JTextArea();
+		pythonTextArea.setTabSize(2);
+		pythonTextArea.setPreferredSize(new Dimension(
+				mainWindow.getSize().width / 2 - 10,
+				mainWindow.getSize().height / 4 * 3));
+		add(pythonTextArea);
+
+		addKeyBindings();
 		setPreferredSize(new Dimension(mainWindow.getSize().width / 2 - 10,
-				mainWindow.getSize().height / 4 * 3 ));
-		JTextArea textArea = new JTextArea();
-		textArea.setPreferredSize(this.getPreferredSize());
-		add(textArea);
+				mainWindow.getSize().height / 4 * 3));
+	}
+
+	public void processTab() {
+		numberOfTabsInLine++;
+		System.out.println(numberOfTabsInLine);
+		pythonTextArea.append("      ");
+	}
+
+	public void processEnter() {
+		String s = pythonTextArea.getText();
+		pythonTextArea.setText("");
+		StringBuilder builder = new StringBuilder();
+		System.out.println(s);
+		for (char c : s.toCharArray()) {
+			if (c == ' ')
+				continue;
+			else if (c == '\t')
+				continue;
+			else
+				builder.append(c);
+		}
+		System.out.println(numberOfTabsInLine + builder.toString());
+
+		numberOfTabsInLine = 0;
+		
+		mainWindow.processText(builder.toString());
+	}
+
+	public void keyPressed(KeyEvent e) {
+
+		if (e.getKeyChar() == KeyEvent.VK_TAB) {
+
+		}
+		if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+			String s = pythonTextArea.getText();
+			pythonTextArea.setText("");
+			pythonTextArea = new JTextArea();
+			StringBuilder builder = new StringBuilder();
+			System.out.println(s);
+			for (char c : s.toCharArray()) {
+				if (c == ' ')
+					continue;
+				else if (c == '\t')
+					continue;
+				else
+					builder.append(c);
+			}
+			System.out.println(numberOfTabsInLine + builder.toString());
+		}
+	}
+
+	public void addKeyBindings() {
+		InputMap inputMap = pythonTextArea.getInputMap();
+		ActionMap actionMap = pythonTextArea.getActionMap();
+		KeyStroke key;
+
+		key = KeyStroke.getKeyStroke("TAB");
+		inputMap.put(key, "tabPressed");
+		TabPressedAction tabPressedAction = new TabPressedAction(this);
+		actionMap.put("tabPressed", tabPressedAction);
+
+		key = KeyStroke.getKeyStroke("ENTER");
+		inputMap.put(key, "enterPressed");
+		EnterPressedAction enterPressedAction = new EnterPressedAction(this);
+		actionMap.put("enterPressed", enterPressedAction);
+
+	}
+}
+
+class TabPressedAction extends AbstractAction {
+	private static final long serialVersionUID = 288648273973263604L;
+	PythonWindow pythonWindow;
+
+	public TabPressedAction(PythonWindow pythonWindow) {
+		this.pythonWindow = pythonWindow;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		pythonWindow.processTab();
+	}
+}
+
+class EnterPressedAction extends AbstractAction {
+	private static final long serialVersionUID = 7131754904803654697L;
+	PythonWindow pythonWindow;
+
+	public EnterPressedAction(PythonWindow pythonWindow) {
+		this.pythonWindow = pythonWindow;
+	}
+
+	public void actionPerformed(ActionEvent e) {
+		pythonWindow.processEnter();
 	}
 }
