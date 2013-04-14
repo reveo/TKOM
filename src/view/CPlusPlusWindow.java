@@ -11,7 +11,7 @@ import line.ForLine;
 
 public class CPlusPlusWindow extends JPanel {
 	private static final long serialVersionUID = -5389192471717222128L;
-
+	private static final int tabSize = 2;
 	public MainWindow mainWindow;
 	public JTextArea textArea;
 
@@ -31,22 +31,18 @@ public class CPlusPlusWindow extends JPanel {
 	}
 
 	public void writeLine(final AbstractLine line) {
-		StringBuilder builder = new StringBuilder();
-		Vector<String> tokens = line.getTokens();
-		if (line instanceof ForLine) {
-			builder.append("for(int " + tokens.elementAt(0) + "=0;"
-					+ tokens.elementAt(0) + "<" + tokens.elementAt(1) + ";++"
-					+ tokens.elementAt(0) + ") {");		
-		}
-		
-		setText(builder.toString());
+		line.writeLine(this);
 	}
 
 	public void writeBracket() {
-		setText("\n }");
+		setText("\n }",0);
 	}
 
-	public void setText(String text) {
+	public void setText(String text, int indent) {
+		System.out.println("INDENT TO " + indent);
+		for(int i = 0; i < indent;++i ) {
+			textArea.append("    ");
+		}
 		textArea.append(text + "\n");
 	}
 }

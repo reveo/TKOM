@@ -2,24 +2,29 @@ package line;
 
 import java.util.Vector;
 
-public class CommentLine implements AbstractLine {
+import view.CPlusPlusWindow;
 
-	public Vector<String> tokens;
+public class CommentLine extends Token implements AbstractLine {
+
 	
-	public CommentLine(String text) {
+	public CommentLine(String text, int indent) {
 		tokens = new Vector<String>();
 		text = text.substring(1);
 		tokens.add(text);
+		this.indent = indent;
+		isOk = true;
 	}
 	public String getNextToken() {
 		return tokens.elementAt(0);
 	}
 	
-	public Vector<String> getTokens() {
-		return tokens;
+	public boolean isOk() {
+		return isOk;
 	}
 	
-	public boolean isOk() {
-		return true;
+	public void writeLine(CPlusPlusWindow cPlusPlusWindow) {
+		StringBuilder builder = new StringBuilder();
+		builder.append("//" + tokens.firstElement());
+		cPlusPlusWindow.setText(builder.toString(), indent);
 	}
 }

@@ -54,7 +54,6 @@ public class PythonWindow extends JPanel {
 			}
 		}
 
-
 		mainWindow.processText(builder.toString(), numberOfTabsInLine);
 		numberOfTabsInLine = 0;
 	}

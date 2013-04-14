@@ -2,23 +2,18 @@ package line;
 
 import java.util.Vector;
 
-public class ForLine implements AbstractLine, ComplexLine {
+import view.CPlusPlusWindow;
 
-	Vector<String> tokens;
-	boolean isOk = true;
+public class ForLine extends Token implements AbstractLine, ComplexLine {
 
-	public ForLine(String text) {
+	public ForLine(String text, int indent) {
 		tokens = new Vector<String>();
 		StringBuffer stringBuffer = new StringBuffer(text);
 
 		getVariableToken(stringBuffer);
 		getRangeToken(stringBuffer);
-
-		System.out.println(this);
-	}
-
-	public Vector<String> getTokens() {
-		return tokens;
+		this.indent = indent;
+		isOk = true;
 	}
 
 	public String toString() {
@@ -115,5 +110,22 @@ public class ForLine implements AbstractLine, ComplexLine {
 	public void error() {
 		System.out.println("BŁĘDNE DANE");
 		isOk = false;
+	}
+
+	public void writeLine(CPlusPlusWindow cPlusPlusWindow) {
+		StringBuilder builder = new StringBuilder();
+		if (tokens.size() == 2) {
+			builder.append("for(int " + tokens.elementAt(0) + "=0;"
+					+ tokens.elementAt(0) + "<" + tokens.elementAt(1) + ";++"
+					+ tokens.elementAt(0) + ") {");
+			cPlusPlusWindow.setText(builder.toString(),indent);
+		}
+		else if(tokens.size() == 3) {
+			builder.append("for(int " + tokens.elementAt(0) + " = " + tokens.elementAt(1) + ";" 
+					+ tokens.elementAt(0) + "<" + tokens.elementAt(2) + ";++"
+					+ tokens.elementAt(0) + ") {");
+			cPlusPlusWindow.setText(builder.toString(), indent);
+			
+		}
 	}
 }

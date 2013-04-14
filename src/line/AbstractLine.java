@@ -1,9 +1,9 @@
 package line;
 
-import java.util.Vector;
+import view.CPlusPlusWindow;
 
 public interface AbstractLine {	
 	String toString();		
-	Vector<String> getTokens();
 	public boolean isOk();
+	public void writeLine(CPlusPlusWindow cPlusPlusWindow);
 }

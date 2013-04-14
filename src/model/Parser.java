@@ -3,7 +3,9 @@ package model;
 import java.util.Vector;
 
 import line.AbstractLine;
+import line.AssignmentLine;
 import line.CommentLine;
+import line.CreateVariableLine;
 import line.ForLine;
 import view.MainWindow;
 
@@ -13,28 +15,22 @@ public class Parser {
 	int actualIndent = 0;
 	int expectedIndent = 0;
 	MainWindow mainWindow;
-	private Vector<AbstractLine> lines;
 	private Vector<LocStack> localStacks;
 
 	public Parser(MainWindow mainWindow) {
 		this.mainWindow = mainWindow;
-		lines = new Vector<AbstractLine>();
 		localStacks = new Vector<LocStack>();
 	}
 
-	public AbstractLine parseText(String text, int number) {
-		handleIndent(number);
+	public AbstractLine parseText(String text, int indent) {
 
+		handleIndent(indent);
+		
 		if (text.startsWith("#")) {
-			System.out.println("KOMENTARZ");
-			AbstractLine newLine = new CommentLine(text);
-			lines.add(newLine);
-			return newLine;
-			// Create new CommentLine object and return;
+			return new CommentLine(text,indent);
 		}
 
-		
-		if (number < actualIndent) {
+		if (indent < actualIndent) {
 
 		}
 
@@ -43,9 +39,7 @@ public class Parser {
 		if (first.equalsIgnoreCase("for")) {
 			++expectedIndent;
 			localStacks.add(new LocStack());
-			AbstractLine forLine = new ForLine(text);
-			lines.add(forLine);
-			return forLine;
+			return new ForLine(text, indent);
 		}
 
 		else if (first.equalsIgnoreCase("while")) {
@@ -71,20 +65,19 @@ public class Parser {
 		// KONIEC INSTRUKCJI ZŁOŻONYCH
 
 		else if (checkIfAssignment(text)) {
-
-			System.out.println(GlobalStack.getInstance());
 			String operand = getLeftOperand(text);
-			System.out.println("OPERAND TO " + operand);
 			if (leftOperandExists(operand)) {
 				System.out.println("MAMY JUŻ TĘ ZMIENNA");
+				return new AssignmentLine(text, indent);
 			} else {
 				System.out.println("JESZCZE JEJ NIE MAMY");
 				if (localStacks.size() != 0)
 					localStacks.lastElement().addVariable(operand);
 				else
 					GlobalStack.getInstance().addVariable(operand);
-				System.out.println(GlobalStack.getInstance());
+				return new CreateVariableLine(text, indent);
 			}
+
 		}
 		return null;
 	}
@@ -105,12 +98,15 @@ public class Parser {
 	public void handleIndent(int newIndent) {
 		if (newIndent > expectedIndent)
 			newIndent = expectedIndent;
+		System.out.println("NEW INDENT " + newIndent);
+		System.out.println("EXPECTED INDENT TO " + expectedIndent);
 		int indentDiff = newIndent - expectedIndent;
-		
+
 		if (indentDiff == 0)
 			return;
 
 		if (indentDiff < 0) {
+			
 			for (int i = 0; i < Math.abs(indentDiff); ++i) {
 				localStacks.remove(localStacks.size() - i - 1);
 				--expectedIndent;
