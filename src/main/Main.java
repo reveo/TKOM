@@ -14,7 +14,8 @@ public class Main {
 		EventQueue.invokeLater(new Runnable() {
 			public void run() {
 				Controller controller = new Controller();
-				new MainWindow(controller);
+				MainWindow mainWindow = new MainWindow(controller);
+				controller.setMainWindow(mainWindow);
 			}
 		});
 	}

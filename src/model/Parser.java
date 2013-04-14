@@ -5,30 +5,35 @@ import java.util.Vector;
 import line.AbstractLine;
 import line.CommentLine;
 import line.ForLine;
+import view.MainWindow;
 
 public class Parser {
 
 	int previousIndent = 0;
 	int actualIndent = 0;
 	int expectedIndent = 0;
+	MainWindow mainWindow;
 	private Vector<AbstractLine> lines;
 	private Vector<LocStack> localStacks;
 
-	public Parser() {
+	public Parser(MainWindow mainWindow) {
+		this.mainWindow = mainWindow;
 		lines = new Vector<AbstractLine>();
 		localStacks = new Vector<LocStack>();
 	}
 
-	public void parseText(String text, int number) {
+	public AbstractLine parseText(String text, int number) {
+		handleIndent(number);
+
 		if (text.startsWith("#")) {
 			System.out.println("KOMENTARZ");
 			AbstractLine newLine = new CommentLine(text);
 			lines.add(newLine);
+			return newLine;
 			// Create new CommentLine object and return;
 		}
 
-		handleIndent(number);
-
+		
 		if (number < actualIndent) {
 
 		}
@@ -38,7 +43,9 @@ public class Parser {
 		if (first.equalsIgnoreCase("for")) {
 			++expectedIndent;
 			localStacks.add(new LocStack());
-			lines.add(new ForLine(text));
+			AbstractLine forLine = new ForLine(text);
+			lines.add(forLine);
+			return forLine;
 		}
 
 		else if (first.equalsIgnoreCase("while")) {
@@ -79,7 +86,7 @@ public class Parser {
 				System.out.println(GlobalStack.getInstance());
 			}
 		}
-
+		return null;
 	}
 
 	public String getNextToken(String text) {
@@ -107,7 +114,7 @@ public class Parser {
 			for (int i = 0; i < Math.abs(indentDiff); ++i) {
 				localStacks.remove(localStacks.size() - i - 1);
 				--expectedIndent;
-				// ZAMYKAJ NAWIASY
+				mainWindow.setBracket();
 			}
 		}
 	}

@@ -18,4 +18,8 @@ public class CommentLine implements AbstractLine {
 	public Vector<String> getTokens() {
 		return tokens;
 	}
+	
+	public boolean isOk() {
+		return true;
+	}
 }

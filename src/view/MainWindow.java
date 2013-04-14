@@ -4,14 +4,14 @@ import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
 
+import line.AbstractLine;
 import controller.Controller;
-
 
 public class MainWindow extends JFrame {
 	private static final long serialVersionUID = 3172688540921699213L;
 
 	private Controller controller;
-	
+
 	private CPlusPlusWindow cPlusPlusWindow;
 	private PythonWindow pythonWindow;
 	private ErrorWindow errorWindow;
@@ -39,5 +39,13 @@ public class MainWindow extends JFrame {
 
 	public void processText(String text, int number) {
 		controller.processText(text, number);
+	}
+
+	public void setNewLine(AbstractLine line) {
+		cPlusPlusWindow.writeLine(line);
+	}
+
+	public void setBracket() {
+		cPlusPlusWindow.writeBracket();
 	}
 }

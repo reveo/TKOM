@@ -5,14 +5,16 @@ import java.util.Vector;
 public class ForLine implements AbstractLine, ComplexLine {
 
 	Vector<String> tokens;
+	boolean isOk = true;
 
 	public ForLine(String text) {
 		tokens = new Vector<String>();
 		StringBuffer stringBuffer = new StringBuffer(text);
-		tokens.add(getVariableToken(stringBuffer));
-		System.out.println("TUTAJ TOKEN TO");
-		System.out.println(stringBuffer);
-		tokens.add(getRangeToken(stringBuffer));
+
+		getVariableToken(stringBuffer);
+		getRangeToken(stringBuffer);
+
+		System.out.println(this);
 	}
 
 	public Vector<String> getTokens() {
@@ -20,15 +22,19 @@ public class ForLine implements AbstractLine, ComplexLine {
 	}
 
 	public String toString() {
-		return null;
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < tokens.size(); ++i) {
+			builder.append(tokens.elementAt(i) + "\t");
+		}
+		return builder.toString();
 	}
 
-	private String getVariableToken(StringBuffer text) {
+	private void getVariableToken(StringBuffer text) {
 		StringBuilder variableToken = new StringBuilder();
 		for (int i = 0; i < text.length(); ++i) {
 			char c = text.charAt(i);
 			if (c == ' ') {
-				text = text.delete(0, i+1);
+				text = text.delete(0, i + 1);
 				break;
 			}
 		}
@@ -36,26 +42,56 @@ public class ForLine implements AbstractLine, ComplexLine {
 		for (int i = 0; i < text.length(); ++i) {
 			char c = text.charAt(i);
 			if (c == ' ') {
-				text = text.delete(0, i+1);
-				return variableToken.toString();
+				text = text.delete(0, i + 1);
+				tokens.add(variableToken.toString());
+				return;
 			}
 			variableToken.append(c);
 		}
-		return null;
 	}
 
-	private String getRangeToken(StringBuffer text)
-	{
-		System.out.println(text);
-		if(text.toString().startsWith("in range(") ){
+	private void getRangeToken(StringBuffer text) {
+		if (text.toString().toLowerCase().startsWith("in range(")) {
+			System.out.println("JEST OK");
 			text.delete(0, 9);
-			text.delete(text.length()-1, text.length());
-			int i = Integer.parseInt(text.toString());
-		}
-		else System.out.println("JEST NIE OK");
-		return null;
-	}
+			if (!text.toString().endsWith("):")) {
+				error();
+				return;
+			}
+			text.delete(text.length() - 2, text.length()); // POZBYWAMY SIE
+															// NAWIASU I
+															// DWUKROPKA
+			int index = text.toString().indexOf(',');
+			if (index == -1) {
+				try {
+					Integer.parseInt(text.toString());
+					tokens.add(text.toString());
+				} catch (NumberFormatException e) {
+					error();
+				}
+			} else {
+				String textOne = text.toString().substring(0, index);
 
+				String textTwo = text.toString().substring(index + 1,
+						text.length());
+				try {
+					int numberOne = Integer.parseInt(textOne.toString());
+					int numberTwo = Integer.parseInt(textTwo.toString());
+					if (numberOne >= numberTwo)
+						error();
+					else {
+						tokens.add(textOne);
+						tokens.add(textTwo);
+					}
+				} catch (NumberFormatException e) {
+					error();
+				}
+
+			}
+		} else
+			error();
+		return;
+	}
 
 	public String getNextToken(String text) {
 		StringBuilder token = new StringBuilder();
@@ -72,4 +108,12 @@ public class ForLine implements AbstractLine, ComplexLine {
 		return token.toString();
 	}
 
+	public boolean isOk() {
+		return isOk;
+	}
+
+	public void error() {
+		System.out.println("BŁĘDNE DANE");
+		isOk = false;
+	}
 }
