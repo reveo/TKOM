@@ -54,9 +54,9 @@ public class PythonWindow extends JPanel {
 			}
 		}
 
-		numberOfTabsInLine = 0;
 
 		mainWindow.processText(builder.toString(), numberOfTabsInLine);
+		numberOfTabsInLine = 0;
 	}
 
 	public void addKeyBindings() {
