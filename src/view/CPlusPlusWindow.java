@@ -10,7 +10,7 @@ import line.AbstractLine;
 
 public class CPlusPlusWindow extends JPanel {
 	private static final long serialVersionUID = -5389192471717222128L;
-	private static final int tabSize = 2;
+	//private static final int tabSize = 2;
 	private JScrollPane scrollPane;
 	public MainWindow mainWindow;
 	public JTextArea textArea;

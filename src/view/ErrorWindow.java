@@ -7,7 +7,7 @@ import javax.swing.JTextArea;
 public class ErrorWindow extends JPanel {
 	private static final long serialVersionUID = 4123990150279254206L;
 
-	private MainWindow mainWindow;
+	//private MainWindow mainWindow;
 	private JTextArea textArea;
 	private JScrollPane scrollPane;
 	
@@ -16,7 +16,7 @@ public class ErrorWindow extends JPanel {
 	}
 
 	public ErrorWindow(MainWindow mainWindow) {
-		this.mainWindow = mainWindow;
+		//this.mainWindow = mainWindow;
 
 		textArea = new JTextArea(5, 80);
 		textArea.setEditable(false);

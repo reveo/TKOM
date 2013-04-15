@@ -13,10 +13,11 @@ public class ForLine extends Token implements ComplexLine {
 		StringBuffer stringBuffer = new StringBuffer(text);
 
 		isOk = true;
-
+		this.indent = indent;
+		
 		getVariableToken(stringBuffer);
 		getRangeToken(stringBuffer);
-		this.indent = indent;
+
 
 	}
 
@@ -96,20 +97,6 @@ public class ForLine extends Token implements ComplexLine {
 		return;
 	}
 
-	public String getNextToken(String text) {
-		StringBuilder token = new StringBuilder();
-		for (int i = 0; i < text.length(); i++) {
-			char c = text.charAt(i);
-			if (c == ' ') {
-				text = text.substring(token.length() + 1);
-				return token.toString();
-			}
-			token.append(c);
-		}
-
-		return token.toString();
-	}
-
 	public boolean isOk() {
 		return isOk;
 	}
@@ -137,7 +124,7 @@ public class ForLine extends Token implements ComplexLine {
 	}
 
 	public void error() {
-		ErrorHandler.getInstance().setError("error");
+		ErrorHandler.getInstance().setError("error in  \"for\" loop");
 		isOk = false;
 	}
 }

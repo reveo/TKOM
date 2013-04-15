@@ -8,6 +8,7 @@ import line.CommentLine;
 import line.ComplexLine;
 import line.CreateVariableLine;
 import line.ForLine;
+import line.WhileLine;
 import view.MainWindow;
 
 public class Parser {
@@ -36,8 +37,8 @@ public class Parser {
 		}
 
 		String first = getNextToken(text);
-
-		if (first.equalsIgnoreCase("for")) {
+		System.out.println("first to " + first);
+		if (first.equals("for")) {
 
 			System.out.println("STOS + " + localStacks.size());
 			ComplexLine line = new ForLine(text, indent);
@@ -56,8 +57,14 @@ public class Parser {
 		}
 
 		else if (first.equalsIgnoreCase("while")) {
-			++expectedIndent;
-			localStacks.add(new LocStack());
+
+			ComplexLine line = new WhileLine(text, indent);
+			if (line.isOk()) {
+				++expectedIndent;
+				localStacks.add(new LocStack());
+				return line;
+			} else
+				return null;
 		}
 
 		else if (first.equalsIgnoreCase("if")) {
@@ -98,16 +105,19 @@ public class Parser {
 	}
 
 	public String getNextToken(String text) {
-		StringBuilder token = new StringBuilder();
-		for (int i = 0; i < text.length(); i++) {
-			char c = text.charAt(i);
-			if (c == ' ') {
-				return token.toString();
-			}
-			token.append(c);
-		}
-
-		return token.toString();
+		String lowerText = text.toLowerCase();
+		if (lowerText.startsWith("for"))
+			return "for";
+		if (lowerText.startsWith("while"))
+			return "while";
+		return null;
+		/*
+		 * StringBuilder token = new StringBuilder(); for (int i = 0; i <
+		 * text.length(); i++) { char c = text.charAt(i); if (c == ' ') { return
+		 * token.toString(); } token.append(c); }
+		 * 
+		 * return token.toString();
+		 */
 	}
 
 	public int handleIndent(int newIndent) {
