@@ -2,6 +2,8 @@ package line;
 
 import java.util.Vector;
 
+import model.ErrorHandler;
+
 import view.CPlusPlusWindow;
 
 public class CommentLine extends Token implements AbstractLine {
@@ -28,5 +30,8 @@ public class CommentLine extends Token implements AbstractLine {
 		cPlusPlusWindow.setText(builder.toString(), indent);
 	}
 	
-//	/public void getIterateVariable
+	public void error() {
+		ErrorHandler.getInstance().setError("Error in comment");
+		this.isOk = false;
+	}
 }

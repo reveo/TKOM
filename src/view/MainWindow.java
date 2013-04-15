@@ -52,4 +52,8 @@ public class MainWindow extends JFrame {
 	public void setErrorText(String text) {
 		errorWindow.setErrorText(text);
 	}
+	
+	public void clearErrorText() {
+		errorWindow.clearErrorText();
+	}
 }

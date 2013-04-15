@@ -43,7 +43,9 @@ public class Parser {
 			ComplexLine line = new ForLine(text, indent);
 
 			String iterateVariable = line.getIterateVariable();
-			if (!checkIterateVariable(iterateVariable)) {
+			if (iterateVariable == null)
+				return null;
+			if ((!checkIterateVariable(iterateVariable)) && line.isOk()) {
 				localStacks.add(new LocStack());
 				localStacks.lastElement().setIterateVariable(
 						line.getIterateVariable());
@@ -77,7 +79,7 @@ public class Parser {
 
 		else if (checkIfAssignment(text)) {
 			String operand = getLeftOperand(text);
-			if(checkIterateVariable(operand)) {
+			if (checkIterateVariable(operand)) {
 				return null;
 			}
 			if (leftOperandExistsActual(operand)) {
@@ -112,7 +114,7 @@ public class Parser {
 		if (newIndent > expectedIndent) {
 			newIndent = expectedIndent;
 		}
-		
+
 		int indentDiff = newIndent - expectedIndent;
 
 		if (indentDiff < 0) {

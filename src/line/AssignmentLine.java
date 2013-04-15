@@ -17,12 +17,10 @@ public class AssignmentLine extends Token implements AbstractLine {
 
 	public void getVariableName(StringBuffer text) {
 		StringBuilder builder = new StringBuilder();
-
 		for (int i = 0; i < text.length(); ++i) {
 			char c = text.charAt(i);
 			if (c == '=') {
 				text = text.delete(0, i + 1);
-				System.out.println("ZMIENNA TO " + text);
 				tokens.add(builder.toString().trim());
 			}
 			builder.append(c);
@@ -48,7 +46,7 @@ public class AssignmentLine extends Token implements AbstractLine {
 		cPlusPlusWindow.setText(builder.toString(), indent);
 	}
 	
-	public String getIterateVariable() {
-		return null;
+	public void error() {
+		
 	}
 }

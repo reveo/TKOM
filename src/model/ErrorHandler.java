@@ -28,4 +28,8 @@ public class ErrorHandler {
 	public void setError(String text) {
 		mainWindow.setErrorText(text + "\n");
 	}
+
+	public void clearError() {
+		mainWindow.clearErrorText();
+	}
 }

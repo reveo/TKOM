@@ -12,10 +12,12 @@ public class ForLine extends Token implements ComplexLine {
 		tokens = new Vector<String>();
 		StringBuffer stringBuffer = new StringBuffer(text);
 
+		isOk = true;
+
 		getVariableToken(stringBuffer);
 		getRangeToken(stringBuffer);
 		this.indent = indent;
-		isOk = true;
+
 	}
 
 	public String toString() {
@@ -65,28 +67,32 @@ public class ForLine extends Token implements ComplexLine {
 					tokens.add(text.toString());
 				} catch (NumberFormatException e) {
 					error();
+					return;
 				}
 			} else {
 				String textOne = text.toString().substring(0, index);
-
 				String textTwo = text.toString().substring(index + 1,
 						text.length());
 				try {
 					int numberOne = Integer.parseInt(textOne.toString());
 					int numberTwo = Integer.parseInt(textTwo.toString());
-					if (numberOne >= numberTwo)
+					if (numberOne >= numberTwo) {
 						error();
-					else {
+						return;
+					} else {
 						tokens.add(textOne);
 						tokens.add(textTwo);
 					}
 				} catch (NumberFormatException e) {
 					error();
+					return;
 				}
 
 			}
-		} else
+		} else {
 			error();
+			return;
+		}
 		return;
 	}
 
@@ -95,7 +101,6 @@ public class ForLine extends Token implements ComplexLine {
 		for (int i = 0; i < text.length(); i++) {
 			char c = text.charAt(i);
 			if (c == ' ') {
-				System.out.println("TU JESTESMY");
 				text = text.substring(token.length() + 1);
 				return token.toString();
 			}
@@ -107,12 +112,6 @@ public class ForLine extends Token implements ComplexLine {
 
 	public boolean isOk() {
 		return isOk;
-	}
-
-	public void error() {
-		System.out.println("BŁĘDNE DANE");
-		ErrorHandler.getInstance().setError("BŁĘDNE DANE");
-		isOk = false;
 	}
 
 	public void writeLine(CPlusPlusWindow cPlusPlusWindow) {
@@ -132,6 +131,13 @@ public class ForLine extends Token implements ComplexLine {
 	}
 
 	public String getIterateVariable() {
+		if (tokens.size() == 0)
+			return null;
 		return tokens.elementAt(0);
+	}
+
+	public void error() {
+		ErrorHandler.getInstance().setError("error");
+		isOk = false;
 	}
 }

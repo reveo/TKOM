@@ -29,4 +29,8 @@ public class ErrorWindow extends JPanel {
 	public void setErrorText(String text) {
 		textArea.append(text);
 	}
+	
+	public void clearErrorText() {
+		textArea.setText("");
+	}
 }

@@ -2,6 +2,8 @@ package line;
 
 import java.util.Vector;
 
+import model.ErrorHandler;
+
 import view.CPlusPlusWindow;
 
 public class CreateVariableLine extends Token implements AbstractLine {
@@ -48,4 +50,7 @@ public class CreateVariableLine extends Token implements AbstractLine {
 		cPlusPlusWindow.setText(builder.toString(), indent);
 	}
 
+	public void error() {
+		ErrorHandler.getInstance().setError("Error in CreateVariable");
+	}
 }
