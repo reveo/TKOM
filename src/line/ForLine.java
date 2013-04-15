@@ -2,9 +2,11 @@ package line;
 
 import java.util.Vector;
 
+import model.ErrorHandler;
+
 import view.CPlusPlusWindow;
 
-public class ForLine extends Token implements AbstractLine, ComplexLine {
+public class ForLine extends Token implements ComplexLine {
 
 	public ForLine(String text, int indent) {
 		tokens = new Vector<String>();
@@ -109,6 +111,7 @@ public class ForLine extends Token implements AbstractLine, ComplexLine {
 
 	public void error() {
 		System.out.println("BŁĘDNE DANE");
+		ErrorHandler.getInstance().setError("BŁĘDNE DANE");
 		isOk = false;
 	}
 
@@ -118,14 +121,17 @@ public class ForLine extends Token implements AbstractLine, ComplexLine {
 			builder.append("for(int " + tokens.elementAt(0) + "=0;"
 					+ tokens.elementAt(0) + "<" + tokens.elementAt(1) + ";++"
 					+ tokens.elementAt(0) + ") {");
-			cPlusPlusWindow.setText(builder.toString(),indent);
-		}
-		else if(tokens.size() == 3) {
-			builder.append("for(int " + tokens.elementAt(0) + " = " + tokens.elementAt(1) + ";" 
-					+ tokens.elementAt(0) + "<" + tokens.elementAt(2) + ";++"
-					+ tokens.elementAt(0) + ") {");
 			cPlusPlusWindow.setText(builder.toString(), indent);
-			
+		} else if (tokens.size() == 3) {
+			builder.append("for(int " + tokens.elementAt(0) + " = "
+					+ tokens.elementAt(1) + ";" + tokens.elementAt(0) + "<"
+					+ tokens.elementAt(2) + ";++" + tokens.elementAt(0) + ") {");
+			cPlusPlusWindow.setText(builder.toString(), indent);
+
 		}
+	}
+
+	public String getIterateVariable() {
+		return tokens.elementAt(0);
 	}
 }

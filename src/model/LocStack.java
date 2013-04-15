@@ -5,8 +5,9 @@ import java.util.Map;
 
 public class LocStack {
 
-	Map<String, Variable> variables;
-
+	private Map<String, Variable> variables;
+	private String iterateVariable;
+	
 	public LocStack() {
 		variables = new HashMap<String, Variable>();
 	}
@@ -24,9 +25,16 @@ public class LocStack {
 
 	public void addVariable(String name) {
 		variables.put(new String(name), new Variable(name));
-
 	}
-
+	
+	public void setIterateVariable(String name) {
+		this.iterateVariable = name;
+	}
+	
+	public String getIterateVariable() {
+		return this.iterateVariable;
+	}
+	
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		for (Map.Entry<String, Variable> entry : variables.entrySet()) {

@@ -1,27 +1,32 @@
 package view;
 
-import java.awt.Dimension;
-
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class ErrorWindow extends JPanel {
 	private static final long serialVersionUID = 4123990150279254206L;
 
 	private MainWindow mainWindow;
-
+	private JTextArea textArea;
+	private JScrollPane scrollPane;
+	
 	public ErrorWindow() {
 
 	}
 
 	public ErrorWindow(MainWindow mainWindow) {
 		this.mainWindow = mainWindow;
-		
-		setPreferredSize(new Dimension(mainWindow.getSize().width,
-				mainWindow.getSize().height / 4 - 10));
-		JTextArea textArea = new JTextArea();
-		textArea.setPreferredSize(this.getPreferredSize());
+
+		textArea = new JTextArea(5, 80);
 		textArea.setEditable(false);
-		add(textArea);
+		scrollPane = new JScrollPane(textArea);
+		scrollPane
+				.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		add(scrollPane);
+	}
+
+	public void setErrorText(String text) {
+		textArea.append(text);
 	}
 }

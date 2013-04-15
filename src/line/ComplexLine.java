@@ -1,5 +1,6 @@
 package line;
 
-public interface ComplexLine {
+public interface ComplexLine extends AbstractLine {
 	String getNextToken(String text);
+	String getIterateVariable();
 }

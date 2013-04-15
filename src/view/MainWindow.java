@@ -48,4 +48,8 @@ public class MainWindow extends JFrame {
 	public void setBracket(int indent) {
 		cPlusPlusWindow.writeBracket(indent);
 	}
+	
+	public void setErrorText(String text) {
+		errorWindow.setErrorText(text);
+	}
 }

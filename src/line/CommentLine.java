@@ -27,4 +27,6 @@ public class CommentLine extends Token implements AbstractLine {
 		builder.append("//" + tokens.firstElement());
 		cPlusPlusWindow.setText(builder.toString(), indent);
 	}
+	
+//	/public void getIterateVariable
 }

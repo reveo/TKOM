@@ -47,5 +47,8 @@ public class AssignmentLine extends Token implements AbstractLine {
 				+ tokens.lastElement() + ");");
 		cPlusPlusWindow.setText(builder.toString(), indent);
 	}
-
+	
+	public String getIterateVariable() {
+		return null;
+	}
 }

@@ -5,6 +5,7 @@ import java.util.Vector;
 import line.AbstractLine;
 import line.AssignmentLine;
 import line.CommentLine;
+import line.ComplexLine;
 import line.CreateVariableLine;
 import line.ForLine;
 import view.MainWindow;
@@ -37,10 +38,19 @@ public class Parser {
 		String first = getNextToken(text);
 
 		if (first.equalsIgnoreCase("for")) {
-			++expectedIndent;
-			localStacks.add(new LocStack());
+
 			System.out.println("STOS + " + localStacks.size());
-			return new ForLine(text, indent);
+			ComplexLine line = new ForLine(text, indent);
+
+			String iterateVariable = line.getIterateVariable();
+			if (!checkIterateVariable(iterateVariable)) {
+				localStacks.add(new LocStack());
+				localStacks.lastElement().setIterateVariable(
+						line.getIterateVariable());
+				++expectedIndent;
+				return line;
+			} else
+				return null;
 		}
 
 		else if (first.equalsIgnoreCase("while")) {
@@ -67,6 +77,9 @@ public class Parser {
 
 		else if (checkIfAssignment(text)) {
 			String operand = getLeftOperand(text);
+			if(checkIterateVariable(operand)) {
+				return null;
+			}
 			if (leftOperandExistsActual(operand)) {
 				System.out.println("MAMY JUŻ TĘ ZMIENNA");
 				return new AssignmentLine(text, indent);
@@ -78,7 +91,6 @@ public class Parser {
 					GlobalStack.getInstance().addVariable(operand);
 				return new CreateVariableLine(text, indent);
 			}
-
 		}
 		return null;
 	}
@@ -98,21 +110,14 @@ public class Parser {
 
 	public int handleIndent(int newIndent) {
 		if (newIndent > expectedIndent) {
-			System.out.println("INDENT JEST ZA DUZY");
 			newIndent = expectedIndent;
 		}
-		System.out.println("NEW INDENT " + newIndent);
-		System.out.println("EXPECTED INDENT TO " + expectedIndent);
+		
 		int indentDiff = newIndent - expectedIndent;
-
-		// if (indentDiff == 0)
-		// return;
 
 		if (indentDiff < 0) {
 			for (int i = 0; i < Math.abs(indentDiff); ++i) {
-				System.out.println("ILOSC STOSOW TO " + localStacks.size());
-				System.out.println("INDENT DIFF TO " + indentDiff);
-				localStacks.remove(localStacks.size() - 1);//
+				localStacks.remove(localStacks.size() - 1);
 				--expectedIndent;
 				mainWindow.setBracket(localStacks.size());
 			}
@@ -167,4 +172,13 @@ public class Parser {
 			return false;
 	}
 
+	public boolean checkIterateVariable(String name) {
+		if (localStacks.size() == 0)
+			return false;
+		for (int i = 0; i < localStacks.size(); ++i) {
+			if (localStacks.elementAt(i).getIterateVariable().equals(name))
+				return true;
+		}
+		return false;
+	}
 }
