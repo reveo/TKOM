@@ -1,5 +1,7 @@
 package line;
 
+import java.util.Vector;
+
 public interface ComplexLine extends AbstractLine {
-	String getIterateVariable();
+	Vector<String> getIterateVariables();
 }

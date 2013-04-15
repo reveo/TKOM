@@ -1,14 +1,16 @@
 package line;
 
 import java.util.Vector;
+
 import model.ErrorHandler;
+
 import view.CPlusPlusWindow;
 
-public class WhileLine extends Token implements ComplexLine {
+public class IfLine extends Token implements ComplexLine {
 
 	String outputString;
-
-	public WhileLine(String text, int indent) {
+	
+	public IfLine(String text, int indent) {
 		tokens = new Vector<String>();
 		StringBuffer stringBuffer = new StringBuffer(text.toLowerCase());
 		isOk = true;
@@ -19,12 +21,12 @@ public class WhileLine extends Token implements ComplexLine {
 	}
 
 	public void getCondition(StringBuffer stringBuffer) {
-		if (!stringBuffer.toString().startsWith("while")) {
+		if (!stringBuffer.toString().startsWith("if")) {
 			error();
 			return;
 		}
 
-		stringBuffer.delete(0, 5);
+		stringBuffer.delete(0, 2);
 		stringBuffer = new StringBuffer(stringBuffer.toString().trim());
 		if (!stringBuffer.toString().startsWith("(")) {
 			error();
@@ -75,7 +77,7 @@ public class WhileLine extends Token implements ComplexLine {
 					continue;
 				}
 			}
-			
+
 			if (c == '&' || c == '|')
 				error();
 			if (c == '=' || c == '!' || c == '<' || c == '>' || c == '('
@@ -107,7 +109,6 @@ public class WhileLine extends Token implements ComplexLine {
 		String s = new String(outputString.replaceAll("and", "&&"));
 		String s2 = new String(s.replaceAll("or", "||"));
 		outputString = s2;
-		System.out.println("OUTPUTSTRING TO " + outputString);
 	}
 
 	public boolean isOk() {
@@ -116,12 +117,12 @@ public class WhileLine extends Token implements ComplexLine {
 
 	public void writeLine(CPlusPlusWindow cPlusPlusWindow) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("while(" + outputString + ") { ");
+		builder.append("if(" + outputString + ") { ");
 		cPlusPlusWindow.setText(builder.toString(), indent);
 	}
 
 	public void error() {
-		ErrorHandler.getInstance().setError("error in  \"while\" loop");
+		ErrorHandler.getInstance().setError("error in  \"if\"");
 		isOk = false;
 	}
 

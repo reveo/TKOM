@@ -1,5 +1,6 @@
 package model;
 
+import java.util.Iterator;
 import java.util.Vector;
 
 import line.AbstractLine;
@@ -7,7 +8,10 @@ import line.AssignmentLine;
 import line.CommentLine;
 import line.ComplexLine;
 import line.CreateVariableLine;
+import line.ElifLine;
+import line.ElseLine;
 import line.ForLine;
+import line.IfLine;
 import line.WhileLine;
 import view.MainWindow;
 
@@ -32,24 +36,19 @@ public class Parser {
 			return new CommentLine(text, indent);
 		}
 
-		if (indent < actualIndent) {
-
-		}
-
 		String first = getNextToken(text);
-		System.out.println("first to " + first);
 		if (first.equals("for")) {
 
 			System.out.println("STOS + " + localStacks.size());
 			ComplexLine line = new ForLine(text, indent);
 
-			String iterateVariable = line.getIterateVariable();
+			String iterateVariable = line.getIterateVariables().elementAt(0);
 			if (iterateVariable == null)
 				return null;
 			if ((!checkIterateVariable(iterateVariable)) && line.isOk()) {
 				localStacks.add(new LocStack());
 				localStacks.lastElement().setIterateVariable(
-						line.getIterateVariable());
+						line.getIterateVariables().elementAt(0));
 				++expectedIndent;
 				return line;
 			} else
@@ -60,26 +59,79 @@ public class Parser {
 
 			ComplexLine line = new WhileLine(text, indent);
 			if (line.isOk()) {
+				Vector<String> variables = line.getIterateVariables();
+				Iterator<String> it = variables.iterator();
+				while (it.hasNext()) {
+					String tmp = it.next();
+					if (tmp.equals(""))
+						continue;
+					if (!((leftOperandExistsActual(tmp)) || leftOperandExistsGlobal(tmp)))
+						return null;
+				}
 				++expectedIndent;
 				localStacks.add(new LocStack());
+				it = variables.iterator();
+				while (it.hasNext()) {
+					localStacks.lastElement().addVariable(it.next());
+				}
+
 				return line;
 			} else
 				return null;
 		}
 
 		else if (first.equalsIgnoreCase("if")) {
-			++expectedIndent;
-			localStacks.add(new LocStack());
+			ComplexLine line = new IfLine(text, indent);
+			if (line.isOk()) {
+				Vector<String> variables = line.getIterateVariables();
+				Iterator<String> it = variables.iterator();
+				while (it.hasNext()) {
+					String tmp = it.next();
+					if (tmp.equals(""))
+						continue;
+					if (!((leftOperandExistsActual(tmp)) || leftOperandExistsGlobal(tmp)))
+						return null;
+				}
+				++expectedIndent;
+				localStacks.add(new LocStack());
+				it = variables.iterator();
+				while (it.hasNext()) {
+					localStacks.lastElement().addVariable(it.next());
+				}
+				return line;
+			} else
+				return null;
 		}
 
 		else if (first.equalsIgnoreCase("elif")) {
-			++expectedIndent;
-			localStacks.add(new LocStack());
+			ComplexLine line = new ElifLine(text, indent);
+			if (line.isOk()) {
+				Vector<String> variables = line.getIterateVariables();
+				Iterator<String> it = variables.iterator();
+				while (it.hasNext()) {
+					String tmp = it.next();
+					if (tmp.equals(""))
+						continue;
+					if (!((leftOperandExistsActual(tmp)) || leftOperandExistsGlobal(tmp)))
+						return null;
+				}
+				++expectedIndent;
+				localStacks.add(new LocStack());
+				it = variables.iterator();
+				while (it.hasNext()) {
+					localStacks.lastElement().addVariable(it.next());
+				}
+				return line;
+			} else
+				return null;
 		}
 
 		else if (first.equalsIgnoreCase("else")) {
-			++expectedIndent;
-			localStacks.add(new LocStack());
+			AbstractLine line = new ElseLine(text, indent);
+			if (line.isOk()) {
+				return line;
+			} else
+				return null;
 		}
 
 		// KONIEC INSTRUKCJI ZŁOŻONYCH
@@ -110,14 +162,13 @@ public class Parser {
 			return "for";
 		if (lowerText.startsWith("while"))
 			return "while";
-		return null;
-		/*
-		 * StringBuilder token = new StringBuilder(); for (int i = 0; i <
-		 * text.length(); i++) { char c = text.charAt(i); if (c == ' ') { return
-		 * token.toString(); } token.append(c); }
-		 * 
-		 * return token.toString();
-		 */
+		if (lowerText.startsWith("if"))
+			return "if";
+		if (lowerText.startsWith("elif"))
+			return "elif";
+		if (lowerText.startsWith("else"))
+			return "else";
+		return "";
 	}
 
 	public int handleIndent(int newIndent) {
@@ -188,6 +239,9 @@ public class Parser {
 		if (localStacks.size() == 0)
 			return false;
 		for (int i = 0; i < localStacks.size(); ++i) {
+			String tmp = localStacks.elementAt(i).getIterateVariable();
+			if (tmp == null)
+				return false;
 			if (localStacks.elementAt(i).getIterateVariable().equals(name))
 				return true;
 		}

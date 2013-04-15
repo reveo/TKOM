@@ -1,14 +1,14 @@
 package line;
 
 import java.util.Vector;
+
 import model.ErrorHandler;
 import view.CPlusPlusWindow;
 
-public class WhileLine extends Token implements ComplexLine {
-
+public class ElifLine extends Token implements ComplexLine {
 	String outputString;
 
-	public WhileLine(String text, int indent) {
+	public ElifLine(String text, int indent) {
 		tokens = new Vector<String>();
 		StringBuffer stringBuffer = new StringBuffer(text.toLowerCase());
 		isOk = true;
@@ -19,12 +19,12 @@ public class WhileLine extends Token implements ComplexLine {
 	}
 
 	public void getCondition(StringBuffer stringBuffer) {
-		if (!stringBuffer.toString().startsWith("while")) {
+		if (!stringBuffer.toString().startsWith("elif")) {
 			error();
 			return;
 		}
 
-		stringBuffer.delete(0, 5);
+		stringBuffer.delete(0, 4);
 		stringBuffer = new StringBuffer(stringBuffer.toString().trim());
 		if (!stringBuffer.toString().startsWith("(")) {
 			error();
@@ -75,7 +75,7 @@ public class WhileLine extends Token implements ComplexLine {
 					continue;
 				}
 			}
-			
+
 			if (c == '&' || c == '|')
 				error();
 			if (c == '=' || c == '!' || c == '<' || c == '>' || c == '('
@@ -116,17 +116,16 @@ public class WhileLine extends Token implements ComplexLine {
 
 	public void writeLine(CPlusPlusWindow cPlusPlusWindow) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("while(" + outputString + ") { ");
+		builder.append("else if(" + outputString + ") { ");
 		cPlusPlusWindow.setText(builder.toString(), indent);
 	}
 
 	public void error() {
-		ErrorHandler.getInstance().setError("error in  \"while\" loop");
+		ErrorHandler.getInstance().setError("error in  \"elif\" ");
 		isOk = false;
 	}
 
 	public Vector<String> getIterateVariables() {
 		return tokens;
 	}
-
 }

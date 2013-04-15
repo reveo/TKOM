@@ -117,10 +117,10 @@ public class ForLine extends Token implements ComplexLine {
 		}
 	}
 
-	public String getIterateVariable() {
+	public Vector<String> getIterateVariables() {
 		if (tokens.size() == 0)
 			return null;
-		return tokens.elementAt(0);
+		return tokens;
 	}
 
 	public void error() {
