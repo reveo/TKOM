@@ -45,7 +45,7 @@ public class MainWindow extends JFrame {
 		cPlusPlusWindow.writeLine(line);
 	}
 
-	public void setBracket() {
-		cPlusPlusWindow.writeBracket();
+	public void setBracket(int indent) {
+		cPlusPlusWindow.writeBracket(indent);
 	}
 }

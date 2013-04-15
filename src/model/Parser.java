@@ -24,10 +24,10 @@ public class Parser {
 
 	public AbstractLine parseText(String text, int indent) {
 
-		handleIndent(indent);
-		
+		indent = handleIndent(indent);
+
 		if (text.startsWith("#")) {
-			return new CommentLine(text,indent);
+			return new CommentLine(text, indent);
 		}
 
 		if (indent < actualIndent) {
@@ -39,6 +39,7 @@ public class Parser {
 		if (first.equalsIgnoreCase("for")) {
 			++expectedIndent;
 			localStacks.add(new LocStack());
+			System.out.println("STOS + " + localStacks.size());
 			return new ForLine(text, indent);
 		}
 
@@ -66,7 +67,7 @@ public class Parser {
 
 		else if (checkIfAssignment(text)) {
 			String operand = getLeftOperand(text);
-			if (leftOperandExists(operand)) {
+			if (leftOperandExistsActual(operand)) {
 				System.out.println("MAMY JUŻ TĘ ZMIENNA");
 				return new AssignmentLine(text, indent);
 			} else {
@@ -95,24 +96,28 @@ public class Parser {
 		return token.toString();
 	}
 
-	public void handleIndent(int newIndent) {
-		if (newIndent > expectedIndent)
+	public int handleIndent(int newIndent) {
+		if (newIndent > expectedIndent) {
+			System.out.println("INDENT JEST ZA DUZY");
 			newIndent = expectedIndent;
+		}
 		System.out.println("NEW INDENT " + newIndent);
 		System.out.println("EXPECTED INDENT TO " + expectedIndent);
 		int indentDiff = newIndent - expectedIndent;
 
-		if (indentDiff == 0)
-			return;
+		// if (indentDiff == 0)
+		// return;
 
 		if (indentDiff < 0) {
-			
 			for (int i = 0; i < Math.abs(indentDiff); ++i) {
-				localStacks.remove(localStacks.size() - i - 1);
+				System.out.println("ILOSC STOSOW TO " + localStacks.size());
+				System.out.println("INDENT DIFF TO " + indentDiff);
+				localStacks.remove(localStacks.size() - 1);//
 				--expectedIndent;
-				mainWindow.setBracket();
+				mainWindow.setBracket(localStacks.size());
 			}
 		}
+		return newIndent;
 	}
 
 	public boolean checkIfAssignment(String text) {
@@ -136,7 +141,7 @@ public class Parser {
 		return "";
 	}
 
-	public boolean leftOperandExists(String operand) {
+	public boolean leftOperandExistsGlobal(String operand) {
 		if (localStacks.size() != 0) {
 			for (int j = localStacks.size() - 1; j >= 0; --j) {
 				if (localStacks.elementAt(j).checkIfVariableExists(operand)) {
@@ -147,6 +152,19 @@ public class Parser {
 		if (GlobalStack.getInstance().checkIfVariableExists(operand))
 			return true;
 		return false;
+	}
+
+	public boolean leftOperandExistsActual(String operand) {
+		if (localStacks.size() == 0) {
+			if (GlobalStack.getInstance().checkIfVariableExists(operand))
+				return true;
+			else
+				return false;
+		}
+		if (localStacks.lastElement().checkIfVariableExists(operand)) {
+			return true;
+		} else
+			return false;
 	}
 
 }

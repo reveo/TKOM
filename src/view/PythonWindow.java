@@ -2,12 +2,12 @@ package view;
 
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.awt.event.KeyEvent;
 
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.KeyStroke;
 
@@ -17,18 +17,17 @@ public class PythonWindow extends JPanel {
 	
 	MainWindow mainWindow;
 	JTextArea pythonTextArea;
+	JScrollPane scrollPane;
 	int numberOfTabsInLine = 0;
 
 	public PythonWindow(MainWindow mainWindow) {
 		this.mainWindow = mainWindow;
 
-		pythonTextArea = new JTextArea();
+		pythonTextArea = new JTextArea(17,40);
 		pythonTextArea.setTabSize(2);
-		pythonTextArea.setPreferredSize(new Dimension(
-				mainWindow.getSize().width / 2 - 10,
-				mainWindow.getSize().height / 4 * 3));
-		add(pythonTextArea);
-
+		
+		scrollPane = new JScrollPane(pythonTextArea);
+		add(scrollPane);
 		addKeyBindings();
 		setPreferredSize(new Dimension(mainWindow.getSize().width / 2 - 10,
 				mainWindow.getSize().height / 4 * 3));
