@@ -6,50 +6,35 @@ import model.ErrorHandler;
 
 import view.CPlusPlusWindow;
 
-public class IfLine extends Token implements ComplexLine {
+public class OtherLine extends Token implements ComplexLine {
 
+	boolean isBracketNeeded = false;
 	String outputString;
 
-	public IfLine(String text, int indent) {
-		tokens = new Vector<String>();
-		StringBuffer stringBuffer = new StringBuffer(text.toLowerCase());
+	public OtherLine(String text, int indent) {
+		this.tokens = new Vector<String>();
 		isOk = true;
 		this.indent = indent;
+		StringBuffer stringBuffer = new StringBuffer(text.toLowerCase());
 
-		getCondition(stringBuffer);
-		setOutput();
+		getOutputString(stringBuffer);
+		this.tokens = getAllVariables(new StringBuffer(outputString));
 	}
 
-	public void getCondition(StringBuffer stringBuffer) {
-		if (!stringBuffer.toString().startsWith("if")) {
-			error();
-			return;
-		}
+	public boolean isOk() {
+		return isOk;
+	}
 
-		stringBuffer.delete(0, 2);
-		stringBuffer = new StringBuffer(stringBuffer.toString().trim());
-		if (!stringBuffer.toString().startsWith("(")) {
-			error();
-			return;
-		}
-
-		if (!stringBuffer.toString().endsWith("):")) {
-			error();
-			return;
-		}
-
-		stringBuffer.delete(0, 1);
-		stringBuffer.delete(stringBuffer.length() - 2, stringBuffer.length());
-		tokens = getAllVariables(stringBuffer);
+	public void getOutputString(StringBuffer stringBuffer) {
+		if (stringBuffer.toString().endsWith(";"))
+			stringBuffer.delete(stringBuffer.length() - 1,
+					stringBuffer.length());
+		String text = stringBuffer.toString().trim();
+		stringBuffer = new StringBuffer(text);
 		outputString = stringBuffer.toString();
-		System.out.println(stringBuffer.toString());
 	}
 
-	public Vector<String> getTokens() {
-		return this.tokens;
-	}
-
-	private Vector<String> getAllVariables(StringBuffer stringBuffer) {
+	public Vector<String> getAllVariables(StringBuffer stringBuffer) {
 		Vector<String> variables = new Vector<String>();
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < stringBuffer.length(); ++i) {
@@ -100,36 +85,44 @@ public class IfLine extends Token implements ComplexLine {
 
 			else {
 				builder.append(c);
+				if (i == stringBuffer.length() - 1) {
+					variables.add(builder.toString());
+				}
 			}
 		}
 		return variables;
 	}
 
-	public void setOutput() {
-		if (outputString != null) {
-			String s = new String(outputString.replaceAll("and", "&&"));
-			String s2 = new String(s.replaceAll("or", "||"));
-			outputString = s2;
-		}
-	}
-
-	public boolean isOk() {
-		return isOk;
-	}
-
 	public void writeLine(CPlusPlusWindow cPlusPlusWindow) {
 		StringBuilder builder = new StringBuilder();
-		builder.append("if(" + outputString + ") { ");
+		builder.append("cout<<");
+		if (isBracketNeeded) {
+			builder.append("\"");
+		}
+		else {
+			builder.append("(");
+		}
+		builder.append(outputString);
+		if (isBracketNeeded) {
+			builder.append("\"");
+		}
+		else {
+			builder.append(")");
+		}
+		builder.append("<<endl;");
 		cPlusPlusWindow.setText(builder.toString(), indent);
 	}
 
 	public void error() {
-		ErrorHandler.getInstance().setError("error in  \"if\"");
+		ErrorHandler.getInstance().setError("error in  \"other\"");
 		isOk = false;
 	}
 
 	public Vector<String> getIterateVariables() {
-		return tokens;
+		return this.tokens;
 	}
 
+	public void setIsBracketNeeded(boolean b) {
+		isBracketNeeded = b;
+	}
 }

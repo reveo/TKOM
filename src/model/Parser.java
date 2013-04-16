@@ -5,6 +5,7 @@ import java.util.Vector;
 
 import line.AbstractLine;
 import line.AssignmentLine;
+import line.BasicArithmeticLine;
 import line.CommentLine;
 import line.ComplexLine;
 import line.CreateVariableLine;
@@ -12,6 +13,8 @@ import line.ElifLine;
 import line.ElseLine;
 import line.ForLine;
 import line.IfLine;
+import line.OtherLine;
+import line.PrintLine;
 import line.WhileLine;
 import view.MainWindow;
 
@@ -45,7 +48,7 @@ public class Parser {
 			String iterateVariable = line.getIterateVariables().elementAt(0);
 			if (iterateVariable == null)
 				return null;
-			if ((!checkIterateVariable(iterateVariable)) && line.isOk()) {
+			if ((checkIterateVariable(iterateVariable)) && line.isOk()) {
 				localStacks.add(new LocStack());
 				localStacks.lastElement().setIterateVariable(
 						line.getIterateVariables().elementAt(0));
@@ -65,7 +68,7 @@ public class Parser {
 					String tmp = it.next();
 					if (tmp.equals(""))
 						continue;
-					if (!((leftOperandExistsActual(tmp)) || leftOperandExistsGlobal(tmp)))
+					if (!((operandExistsActual(tmp)) || operandExistsGlobal(tmp)))
 						return null;
 				}
 				++expectedIndent;
@@ -89,15 +92,17 @@ public class Parser {
 					String tmp = it.next();
 					if (tmp.equals(""))
 						continue;
-					if (!((leftOperandExistsActual(tmp)) || leftOperandExistsGlobal(tmp)))
+					if (!((operandExistsActual(tmp)) || operandExistsGlobal(tmp)))
 						return null;
 				}
 				++expectedIndent;
+				setIf(true);
 				localStacks.add(new LocStack());
 				it = variables.iterator();
 				while (it.hasNext()) {
 					localStacks.lastElement().addVariable(it.next());
 				}
+				
 				return line;
 			} else
 				return null;
@@ -105,14 +110,14 @@ public class Parser {
 
 		else if (first.equalsIgnoreCase("elif")) {
 			ComplexLine line = new ElifLine(text, indent);
-			if (line.isOk()) {
+			if (line.isOk() && checkIf()) {
 				Vector<String> variables = line.getIterateVariables();
 				Iterator<String> it = variables.iterator();
 				while (it.hasNext()) {
 					String tmp = it.next();
 					if (tmp.equals(""))
 						continue;
-					if (!((leftOperandExistsActual(tmp)) || leftOperandExistsGlobal(tmp)))
+					if (!((operandExistsActual(tmp)) || operandExistsGlobal(tmp)))
 						return null;
 				}
 				++expectedIndent;
@@ -128,20 +133,42 @@ public class Parser {
 
 		else if (first.equalsIgnoreCase("else")) {
 			AbstractLine line = new ElseLine(text, indent);
-			if (line.isOk()) {
+			if (line.isOk() && checkIf()) {
+				localStacks.add(new LocStack());
+				setIf(false);
+				++expectedIndent;
 				return line;
 			} else
 				return null;
 		}
 
-		// KONIEC INSTRUKCJI ZŁOŻONYCH
+		else if (first.equalsIgnoreCase("print")) {
+			PrintLine line = new PrintLine(text, indent);
+			Vector<String> variables = line.getIterateVariables();
+			if ((variables.size() == 0) && (line.isOk())) {
+				line.setIsBracketNeeded(false);
+				return (AbstractLine) line;
+			}
+			Iterator<String> it = variables.iterator();
+			while (it.hasNext()) {
+				String tmp = it.next();
+				if (tmp.equals(""))
+					continue;
+				if (!((operandExistsActual(tmp)) || operandExistsGlobal(tmp))) {
+					line.setIsBracketNeeded(true);
+					return (AbstractLine) line;
+				}
+			}
+			line.setIsBracketNeeded(false);
+			return (AbstractLine) line;
+		}
 
 		else if (checkIfAssignment(text)) {
 			String operand = getLeftOperand(text);
-			if (checkIterateVariable(operand)) {
+			if (!checkLeftOperand(operand)) {
 				return null;
 			}
-			if (leftOperandExistsActual(operand)) {
+			if (operandExistsActual(operand)) {
 				System.out.println("MAMY JUŻ TĘ ZMIENNA");
 				return new AssignmentLine(text, indent);
 			} else {
@@ -153,7 +180,31 @@ public class Parser {
 				return new CreateVariableLine(text, indent);
 			}
 		}
-		return null;
+
+		else if (checkIfBasicArithmeticOperation(text)) {
+			return new BasicArithmeticLine(text, indent);
+		}
+
+		else {
+			OtherLine line = new OtherLine(text, indent);
+			Vector<String> variables = line.getIterateVariables();
+			if ((variables.size() == 0) && (line.isOk())) {
+				line.setIsBracketNeeded(false);
+				return (AbstractLine) line;
+			}
+			Iterator<String> it = variables.iterator();
+			while (it.hasNext()) {
+				String tmp = it.next();
+				if (tmp.equals(""))
+					continue;
+				if (!((operandExistsActual(tmp)) || operandExistsGlobal(tmp))) {
+					line.setIsBracketNeeded(true);
+					return (AbstractLine) line;
+				}
+			}
+			line.setIsBracketNeeded(false);
+			return (AbstractLine) line;
+		}
 	}
 
 	public String getNextToken(String text) {
@@ -168,6 +219,8 @@ public class Parser {
 			return "elif";
 		if (lowerText.startsWith("else"))
 			return "else";
+		if (lowerText.startsWith("print"))
+			return "print";
 		return "";
 	}
 
@@ -189,12 +242,13 @@ public class Parser {
 	}
 
 	public boolean checkIfAssignment(String text) {
+		int numberOfEqualSigns = 0;
 		for (int i = 0; i < text.length(); ++i) {
 			char c = text.charAt(i);
 			if (c == '=')
-				return true;
+				++numberOfEqualSigns;
 		}
-		return false;
+		return (numberOfEqualSigns == 1);
 	}
 
 	public String getLeftOperand(String text) {
@@ -209,7 +263,7 @@ public class Parser {
 		return "";
 	}
 
-	public boolean leftOperandExistsGlobal(String operand) {
+	public boolean operandExistsGlobal(String operand) {
 		if (localStacks.size() != 0) {
 			for (int j = localStacks.size() - 1; j >= 0; --j) {
 				if (localStacks.elementAt(j).checkIfVariableExists(operand)) {
@@ -222,7 +276,7 @@ public class Parser {
 		return false;
 	}
 
-	public boolean leftOperandExistsActual(String operand) {
+	public boolean operandExistsActual(String operand) {
 		if (localStacks.size() == 0) {
 			if (GlobalStack.getInstance().checkIfVariableExists(operand))
 				return true;
@@ -237,14 +291,85 @@ public class Parser {
 
 	public boolean checkIterateVariable(String name) {
 		if (localStacks.size() == 0)
-			return false;
+			return true;
 		for (int i = 0; i < localStacks.size(); ++i) {
 			String tmp = localStacks.elementAt(i).getIterateVariable();
 			if (tmp == null)
-				return false;
-			if (localStacks.elementAt(i).getIterateVariable().equals(name))
 				return true;
+			if (localStacks.elementAt(i).getIterateVariable().equals(name))
+				return false;
 		}
-		return false;
+		return true;
+	}
+
+	public boolean checkLeftOperand(String name) {
+		char c = name.charAt(0);
+		if (Character.isDigit(c))
+			return false;
+		if (c == '?' || c == '/' || c == '<' || c == '>' || c == ','
+				|| c == '.' || c == '\"')
+			return false;
+
+		for (int i = 0; i < name.length(); ++i) {
+			c = name.charAt(i);
+			if (c == '(' || c == ')' || c == '[' || c == ']')
+				return false;
+		}
+		return true;
+	}
+
+	public boolean checkIfLogicalCondition(String name) {
+		StringBuilder builder = new StringBuilder();
+		for (int i = 0; i < name.length(); ++i) {
+			char c = name.charAt(i);
+			if (c == '(' || c == ')' || c == ' ' || c == '=') {
+				if (!(operandExistsActual(builder.toString()) || operandExistsGlobal(builder
+						.toString())))
+					return false;
+			} else {
+				builder.append(c);
+			}
+		}
+		return true;
+	}
+
+	public boolean checkIfBasicArithmeticOperation(String text) {
+		char c;
+		for (int i = 0; i < text.length(); ++i) {
+			c = text.charAt(i);
+			if (Character.isDigit(c))
+				continue;
+			if (c == '(' || c == ')' || c == '+' || c == '-' || c == '*'
+					|| c == '/' || c == '%' || c == ' ')
+				continue;
+			if ((i == text.length() - 1) && (c == ';'))
+				continue;
+			return false;
+		}
+		return true;
+	}
+
+	public boolean checkIf() {
+		if(localStacks.size() == 1) {
+			return GlobalStack.getInstance().wasIf();
+		}
+		if(localStacks.size() == 0) {
+			return GlobalStack.getInstance().wasIf();
+		}
+		return localStacks.elementAt(localStacks.size()-1).wasIf();
+	}
+	
+	public void setIf(boolean b) {
+		if(localStacks.size() == 1) {
+			GlobalStack.getInstance().setIf(b);
+			return;
+		}
+		if(localStacks.size() == 0) {
+			GlobalStack.getInstance().setIf(b);
+			return;
+		}
+		
+		localStacks.elementAt(localStacks.size()-1).setIf(b);
+		return;
 	}
 }

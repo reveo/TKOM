@@ -7,7 +7,7 @@ public class GlobalStack implements AbstractStack {
 	Map<String, Variable> variables;
 
 	private static volatile GlobalStack instance = null;
-
+	private boolean wasIf = false;
 	public static GlobalStack getInstance() {
 		if (instance == null) {
 			synchronized (GlobalStack.class) {
@@ -47,5 +47,13 @@ public class GlobalStack implements AbstractStack {
 			builder.append(entry.getKey() + "\n");
 	    }
 		return builder.toString();
+	}
+
+	public boolean wasIf() {
+		return wasIf;
+	}
+
+	public void setIf(boolean b) {
+		wasIf = b;
 	}
 }

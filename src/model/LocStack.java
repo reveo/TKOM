@@ -8,6 +8,8 @@ public class LocStack {
 	private Map<String, Variable> variables;
 	private String iterateVariable;
 	
+	private boolean wasIf = false;
+	
 	public LocStack() {
 		variables = new HashMap<String, Variable>();
 	}
@@ -42,5 +44,13 @@ public class LocStack {
 		}
 
 		return builder.toString();
+	}
+	
+	public boolean wasIf() {
+		return wasIf;
+	}
+
+	public void setIf(boolean b) {
+		wasIf = b;
 	}
 }
