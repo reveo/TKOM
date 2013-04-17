@@ -102,7 +102,7 @@ public class Parser {
 				while (it.hasNext()) {
 					localStacks.lastElement().addVariable(it.next());
 				}
-				
+
 				return line;
 			} else
 				return null;
@@ -165,6 +165,15 @@ public class Parser {
 
 		else if (checkIfAssignment(text)) {
 			String operand = getLeftOperand(text);
+			Vector<String> rOperands = getRightOperand(text);
+			if (!(rOperands.size() == 0)) {
+				Iterator<String> it = rOperands.iterator();
+				while (it.hasNext()) {
+					String s = (String) it.next();
+					if (!((operandExistsActual(s)) || operandExistsGlobal(s)))
+						return null;
+				}
+			}
 			if (!checkLeftOperand(operand)) {
 				return null;
 			}
@@ -350,26 +359,61 @@ public class Parser {
 	}
 
 	public boolean checkIf() {
-		if(localStacks.size() == 1) {
+		if (localStacks.size() == 1) {
 			return GlobalStack.getInstance().wasIf();
 		}
-		if(localStacks.size() == 0) {
+		if (localStacks.size() == 0) {
 			return GlobalStack.getInstance().wasIf();
 		}
-		return localStacks.elementAt(localStacks.size()-1).wasIf();
+		return localStacks.elementAt(localStacks.size() - 1).wasIf();
 	}
-	
+
 	public void setIf(boolean b) {
-		if(localStacks.size() == 1) {
+		if (localStacks.size() == 1) {
 			GlobalStack.getInstance().setIf(b);
 			return;
 		}
-		if(localStacks.size() == 0) {
+		if (localStacks.size() == 0) {
 			GlobalStack.getInstance().setIf(b);
 			return;
 		}
-		
-		localStacks.elementAt(localStacks.size()-1).setIf(b);
+
+		localStacks.elementAt(localStacks.size() - 1).setIf(b);
 		return;
+	}
+
+	public Vector<String> getRightOperand(String text) {
+		Vector<String> variables = new Vector<String>();
+
+		boolean inBracket = false;
+		int i = 0;
+		for (; i < text.length(); ++i) {
+			char c = text.charAt(i);
+			if (c == '=')
+				break;
+		}
+		if (i == text.length())
+			return null;
+		StringBuilder builder = new StringBuilder();
+		++i;
+		for (; i < text.length(); ++i) {
+			char c = text.charAt(i);
+			if ((c == '\"') || (c == '\'')) {
+				inBracket = !inBracket;
+				continue;
+			}
+			if (inBracket)
+				continue;
+			if (c == '(' || c == ')' || c == ';' || c == '+' || c == '-'
+					|| c == '*' || c == '/' || c == ' ' || Character.isDigit(c)) {
+				String x = builder.toString();
+				if (!(x.equals("")))
+					variables.add(x);
+				builder.setLength(0);
+			} else
+				builder.append(c);
+		}
+
+		return variables;
 	}
 }
