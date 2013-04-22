@@ -6,6 +6,7 @@ import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.ActionMap;
 import javax.swing.InputMap;
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -19,17 +20,19 @@ public class PythonWindow extends JPanel {
 	JTextArea pythonTextArea;
 	JScrollPane scrollPane;
 	int numberOfTabsInLine = 0;
-
+	JLabel title;
 	public PythonWindow(MainWindow mainWindow) {
 		this.mainWindow = mainWindow;
-
-		pythonTextArea = new JTextArea(17,40);
+		
+		title = new JLabel("Input window");
+		add(title);
+		pythonTextArea = new JTextArea(17,42);
 		pythonTextArea.setTabSize(2);
 		
 		scrollPane = new JScrollPane(pythonTextArea);
 		add(scrollPane);
 		addKeyBindings();
-		setPreferredSize(new Dimension(mainWindow.getSize().width / 2 - 10,
+		setPreferredSize(new Dimension(540,
 				mainWindow.getSize().height / 4 * 3));
 	}
 

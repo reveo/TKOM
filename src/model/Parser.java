@@ -13,6 +13,8 @@ import line.ElifLine;
 import line.ElseLine;
 import line.ForLine;
 import line.IfLine;
+import line.ListAssignmentLine;
+import line.ListCreateVariableLine;
 import line.OtherLine;
 import line.PrintLine;
 import line.WhileLine;
@@ -36,7 +38,10 @@ public class Parser {
 		indent = handleIndent(indent);
 
 		if (text.startsWith("#")) {
+			if (localStacks.size() == 0)
+				setGlobalStackIf(false);
 			return new CommentLine(text, indent);
+
 		}
 
 		String first = getNextToken(text);
@@ -53,13 +58,14 @@ public class Parser {
 				localStacks.lastElement().setIterateVariable(
 						line.getIterateVariables().elementAt(0));
 				++expectedIndent;
+				if (localStacks.size() == 0)
+					setGlobalStackIf(false);
 				return line;
 			} else
 				return null;
 		}
 
 		else if (first.equalsIgnoreCase("while")) {
-
 			ComplexLine line = new WhileLine(text, indent);
 			if (line.isOk()) {
 				Vector<String> variables = line.getIterateVariables();
@@ -77,7 +83,8 @@ public class Parser {
 				while (it.hasNext()) {
 					localStacks.lastElement().addVariable(it.next());
 				}
-
+				if (localStacks.size() == 0)
+					setGlobalStackIf(false);
 				return line;
 			} else
 				return null;
@@ -102,7 +109,8 @@ public class Parser {
 				while (it.hasNext()) {
 					localStacks.lastElement().addVariable(it.next());
 				}
-
+				if (localStacks.size() == 0)
+					setGlobalStackIf(true);
 				return line;
 			} else
 				return null;
@@ -126,6 +134,8 @@ public class Parser {
 				while (it.hasNext()) {
 					localStacks.lastElement().addVariable(it.next());
 				}
+				if (localStacks.size() == 0)
+					setGlobalStackIf(true);
 				return line;
 			} else
 				return null;
@@ -137,6 +147,8 @@ public class Parser {
 				localStacks.add(new LocStack());
 				setIf(false);
 				++expectedIndent;
+				if (localStacks.size() == 0)
+					setGlobalStackIf(false);
 				return line;
 			} else
 				return null;
@@ -147,6 +159,8 @@ public class Parser {
 			Vector<String> variables = line.getIterateVariables();
 			if ((variables.size() == 0) && (line.isOk())) {
 				line.setIsBracketNeeded(false);
+				if (localStacks.size() == 0)
+					setGlobalStackIf(false);
 				return (AbstractLine) line;
 			}
 			Iterator<String> it = variables.iterator();
@@ -156,41 +170,75 @@ public class Parser {
 					continue;
 				if (!((operandExistsActual(tmp)) || operandExistsGlobal(tmp))) {
 					line.setIsBracketNeeded(true);
+					if (localStacks.size() == 0)
+						setGlobalStackIf(false);
 					return (AbstractLine) line;
 				}
 			}
 			line.setIsBracketNeeded(false);
+			if (localStacks.size() == 0)
+				setGlobalStackIf(false);
 			return (AbstractLine) line;
 		}
 
 		else if (checkIfAssignment(text)) {
 			String operand = getLeftOperand(text);
-			Vector<String> rOperands = getRightOperand(text);
-			if (!(rOperands.size() == 0)) {
-				Iterator<String> it = rOperands.iterator();
-				while (it.hasNext()) {
-					String s = (String) it.next();
-					if (!((operandExistsActual(s)) || operandExistsGlobal(s)))
-						return null;
+
+			Vector<String> tmp = isRightOperandList(text);
+			if ((tmp != null) && (tmp.size() != 0)) {
+				if (!checkLeftOperand(operand)) {
+					return null;
 				}
-			}
-			if (!checkLeftOperand(operand)) {
-				return null;
-			}
-			if (operandExistsActual(operand)) {
-				System.out.println("MAMY JUŻ TĘ ZMIENNA");
-				return new AssignmentLine(text, indent);
+				if (operandExistsActual(operand)) {
+					System.out.println("MAMY JUŻ TĘ ZMIENNA");
+					if (localStacks.size() == 0)
+						setGlobalStackIf(false);
+					return new ListAssignmentLine(text, indent);
+				} else {
+					System.out.println("JESZCZE JEJ NIE MAMY");
+					if (localStacks.size() != 0)
+						localStacks.lastElement().addVariable(operand);
+					else
+						GlobalStack.getInstance().addVariable(operand);
+					if (localStacks.size() == 0)
+						setGlobalStackIf(false);
+					return new ListCreateVariableLine(text, indent);
+				}
 			} else {
-				System.out.println("JESZCZE JEJ NIE MAMY");
-				if (localStacks.size() != 0)
-					localStacks.lastElement().addVariable(operand);
-				else
-					GlobalStack.getInstance().addVariable(operand);
-				return new CreateVariableLine(text, indent);
+				Vector<String> rOperands = getRightOperand(text);
+				if (!(rOperands.size() == 0)) {
+					Iterator<String> it = rOperands.iterator();
+					while (it.hasNext()) {
+						String s = (String) it.next();
+						if (!((operandExistsActual(s)) || operandExistsGlobal(s)))
+							return null;
+					}
+				}
+
+				if (!checkLeftOperand(operand)) {
+					return null;
+				}
+				if (operandExistsActual(operand)) {
+					System.out.println("MAMY JUŻ TĘ ZMIENNA");
+					if (localStacks.size() == 0)
+						setGlobalStackIf(false);
+					return new AssignmentLine(text, indent);
+				} else {
+					System.out.println("JESZCZE JEJ NIE MAMY");
+					if (localStacks.size() != 0)
+						localStacks.lastElement().addVariable(operand);
+					else
+						GlobalStack.getInstance().addVariable(operand);
+					if (localStacks.size() == 0)
+						setGlobalStackIf(false);
+					return new CreateVariableLine(text, indent);
+				}
 			}
 		}
 
 		else if (checkIfBasicArithmeticOperation(text)) {
+			if (localStacks.size() == 0)
+				setGlobalStackIf(false);
 			return new BasicArithmeticLine(text, indent);
 		}
 
@@ -199,6 +247,8 @@ public class Parser {
 			Vector<String> variables = line.getIterateVariables();
 			if ((variables.size() == 0) && (line.isOk())) {
 				line.setIsBracketNeeded(false);
+				if (localStacks.size() == 0)
+					setGlobalStackIf(false);
 				return (AbstractLine) line;
 			}
 			Iterator<String> it = variables.iterator();
@@ -208,10 +258,14 @@ public class Parser {
 					continue;
 				if (!((operandExistsActual(tmp)) || operandExistsGlobal(tmp))) {
 					line.setIsBracketNeeded(true);
+					if (localStacks.size() == 0)
+						setGlobalStackIf(false);
 					return (AbstractLine) line;
 				}
 			}
 			line.setIsBracketNeeded(false);
+			if (localStacks.size() == 0)
+				setGlobalStackIf(false);
 			return (AbstractLine) line;
 		}
 	}
@@ -416,4 +470,48 @@ public class Parser {
 
 		return variables;
 	}
+
+	Vector<String> isRightOperandList(String text) {
+		Vector<String> tokens = new Vector<String>();
+		int i = 0;
+		for (; i < text.length(); ++i) {
+			char c = text.charAt(i);
+			if (c == '=')
+				break;
+		}
+
+		String newText = text.substring(i + 1).trim();
+		if (!newText.startsWith(("[")))
+			return null;
+		if (!((newText.endsWith("];") || (newText.endsWith("]")))))
+			return null;
+
+		if (newText.endsWith("]"))
+			newText = newText.substring(1, newText.length() - 1);
+		else
+			newText = newText.substring(1, newText.length() - 2);
+
+		StringBuilder builder = new StringBuilder();
+		for (int j = 0; j < newText.length(); ++j) {
+			char c = newText.charAt(j);
+			if (c == ' ')
+				continue;
+			else if (c == ',') {
+				if (builder.length() != 0)
+					tokens.add(builder.toString());
+				else
+					return null;
+				builder.setLength(0);
+			} else
+				builder.append(c);
+		}
+		tokens.add(builder.toString());
+		System.out.println(newText);
+		return tokens;
+	}
+
+	void setGlobalStackIf(boolean b) {
+		GlobalStack.getInstance().setIf(b);
+	}
+
 }

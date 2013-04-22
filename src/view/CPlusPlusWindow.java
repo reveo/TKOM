@@ -2,6 +2,7 @@ package view;
 
 import java.awt.Dimension;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
@@ -14,15 +15,17 @@ public class CPlusPlusWindow extends JPanel {
 	private JScrollPane scrollPane;
 	public MainWindow mainWindow;
 	public JTextArea textArea;
-
+	public JLabel title;
 	public CPlusPlusWindow() {
 
 	}
 
 	public CPlusPlusWindow(MainWindow mainWindow) {
 		this.mainWindow = mainWindow;
-		setPreferredSize(new Dimension(mainWindow.getSize().width / 2 - 10,
+		setPreferredSize(new Dimension(550,
 				mainWindow.getSize().height / 4 * 3));
+		title = new JLabel("Output window");
+		add(title);
 		textArea = new JTextArea(17,40);
 		textArea.setEditable(false);
 		scrollPane = new JScrollPane(textArea);

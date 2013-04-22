@@ -82,18 +82,19 @@ public class IfLine extends Token implements ComplexLine {
 				error();
 			if (c == '=' || c == '!' || c == '<' || c == '>' || c == '('
 					|| c == ')') {
-				variables.add(builder.toString());
-				System.out.println(builder.toString());
+				if (builder.length() != 0)
+					variables.add(builder.toString());
 				builder.setLength(0);
 				continue;
 			} else if (c == ' ') {
-				variables.add(builder.toString());
+				if (builder.length() != 0)
+					variables.add(builder.toString());
 				System.out.println(builder.toString());
 				builder.setLength(0);
 				continue;
 			} else if (Character.isDigit(c)) {
-				variables.add(builder.toString());
-				System.out.println(builder.toString());
+				if (builder.length() != 0)
+					variables.add(builder.toString());
 				builder.setLength(0);
 				continue;
 			}

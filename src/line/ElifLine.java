@@ -80,7 +80,8 @@ public class ElifLine extends Token implements ComplexLine {
 				error();
 			if (c == '=' || c == '!' || c == '<' || c == '>' || c == '('
 					|| c == ')') {
-				variables.add(builder.toString());
+				if (builder.length() != 0)
+					variables.add(builder.toString());
 				System.out.println(builder.toString());
 				builder.setLength(0);
 				continue;
@@ -100,6 +101,7 @@ public class ElifLine extends Token implements ComplexLine {
 				builder.append(c);
 			}
 		}
+		if(builder.length() != 0 ) variables.add(builder.toString());
 		return variables;
 	}
 

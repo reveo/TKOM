@@ -22,6 +22,7 @@ public class AssignmentLine extends Token implements AbstractLine {
 			if (c == '=') {
 				text = text.delete(0, i + 1);
 				tokens.add(builder.toString().trim());
+				return;
 			}
 			builder.append(c);
 		}

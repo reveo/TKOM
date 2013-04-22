@@ -52,7 +52,6 @@ public class ForLine extends Token implements ComplexLine {
 
 	private void getRangeToken(StringBuffer text) {
 		if (text.toString().toLowerCase().startsWith("in range(")) {
-			System.out.println("JEST OK");
 			text.delete(0, 9);
 			if (!text.toString().endsWith("):")) {
 				error();
