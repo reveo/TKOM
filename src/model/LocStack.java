@@ -3,7 +3,7 @@ package model;
 import java.util.HashMap;
 import java.util.Map;
 
-public class LocStack {
+public class LocStack implements AbstractStack {
 
 	private Map<String, Variable> variables;
 	private String iterateVariable;
@@ -52,5 +52,9 @@ public class LocStack {
 
 	public void setIf(boolean b) {
 		wasIf = b;
+	}
+
+	public void clear() {
+		/* Nothing to do here */
 	}
 }

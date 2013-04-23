@@ -1,6 +1,10 @@
 package view;
 
 import java.awt.Dimension;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -44,10 +48,23 @@ public class CPlusPlusWindow extends JPanel {
 	}
 
 	public void setText(String text, int indent) {
-		System.out.println("INDENT TO " + indent);
 		for (int i = 0; i < indent; ++i) {
 			textArea.append("    ");
 		}
 		textArea.append(text + "\n");
+	}
+	
+	
+	public void writeToFile(File file) {
+		try {
+			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			writer.write(textArea.getText());
+			writer.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	public void clearText() {
+		textArea.setText("");
 	}
 }

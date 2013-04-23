@@ -40,7 +40,6 @@ public class ElifLine extends Token implements ComplexLine {
 		stringBuffer.delete(stringBuffer.length() - 2, stringBuffer.length());
 		tokens = getAllVariables(stringBuffer);
 		outputString = stringBuffer.toString();
-		System.out.println(stringBuffer.toString());
 	}
 
 	public Vector<String> getTokens() {
@@ -82,17 +81,14 @@ public class ElifLine extends Token implements ComplexLine {
 					|| c == ')') {
 				if (builder.length() != 0)
 					variables.add(builder.toString());
-				System.out.println(builder.toString());
 				builder.setLength(0);
 				continue;
 			} else if (c == ' ') {
 				variables.add(builder.toString());
-				System.out.println(builder.toString());
 				builder.setLength(0);
 				continue;
 			} else if (Character.isDigit(c)) {
 				variables.add(builder.toString());
-				System.out.println(builder.toString());
 				builder.setLength(0);
 				continue;
 			}
@@ -109,7 +105,6 @@ public class ElifLine extends Token implements ComplexLine {
 		String s = new String(outputString.replaceAll("and", "&&"));
 		String s2 = new String(s.replaceAll("or", "||"));
 		outputString = s2;
-		System.out.println("OUTPUTSTRING TO " + outputString);
 	}
 
 	public boolean isOk() {
@@ -122,12 +117,14 @@ public class ElifLine extends Token implements ComplexLine {
 		cPlusPlusWindow.setText(builder.toString(), indent);
 	}
 
-	public void error() {
-		ErrorHandler.getInstance().setError("error in  \"elif\" ");
-		isOk = false;
-	}
 
 	public Vector<String> getIterateVariables() {
 		return tokens;
 	}
+	
+	public void error() {
+		ErrorHandler.getInstance().setError("Error in ElifLine");
+		isOk = false;
+	}
+
 }

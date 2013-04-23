@@ -34,9 +34,9 @@ public class Parser {
 	}
 
 	public AbstractLine parseText(String text, int indent) {
-
 		indent = handleIndent(indent);
-
+		
+		text = text.trim();
 		if (text.startsWith("#")) {
 			if (localStacks.size() == 0)
 				setGlobalStackIf(false);
@@ -45,11 +45,10 @@ public class Parser {
 		}
 
 		String first = getNextToken(text);
+		
+		
 		if (first.equals("for")) {
-
-			System.out.println("STOS + " + localStacks.size());
 			ComplexLine line = new ForLine(text, indent);
-
 			String iterateVariable = line.getIterateVariables().elementAt(0);
 			if (iterateVariable == null)
 				return null;
@@ -190,12 +189,10 @@ public class Parser {
 					return null;
 				}
 				if (operandExistsActual(operand)) {
-					System.out.println("MAMY JUŻ TĘ ZMIENNA");
 					if (localStacks.size() == 0)
 						setGlobalStackIf(false);
 					return new ListAssignmentLine(text, indent);
 				} else {
-					System.out.println("JESZCZE JEJ NIE MAMY");
 					if (localStacks.size() != 0)
 						localStacks.lastElement().addVariable(operand);
 					else
@@ -214,17 +211,15 @@ public class Parser {
 							return null;
 					}
 				}
-
+				
 				if (!checkLeftOperand(operand)) {
 					return null;
 				}
 				if (operandExistsActual(operand)) {
-					System.out.println("MAMY JUŻ TĘ ZMIENNA");
 					if (localStacks.size() == 0)
 						setGlobalStackIf(false);
 					return new AssignmentLine(text, indent);
 				} else {
-					System.out.println("JESZCZE JEJ NIE MAMY");
 					if (localStacks.size() != 0)
 						localStacks.lastElement().addVariable(operand);
 					else
@@ -302,6 +297,15 @@ public class Parser {
 			}
 		}
 		return newIndent;
+	}
+
+	public void closeAllBrackets() {
+		if (localStacks.size() == 0)
+			return;
+		for(int i = localStacks.size(); i > 0; --i) {
+			mainWindow.setBracket(i-1);
+			localStacks.remove(localStacks.size() - 1);
+		}
 	}
 
 	public boolean checkIfAssignment(String text) {
@@ -506,12 +510,15 @@ public class Parser {
 				builder.append(c);
 		}
 		tokens.add(builder.toString());
-		System.out.println(newText);
 		return tokens;
 	}
 
 	void setGlobalStackIf(boolean b) {
 		GlobalStack.getInstance().setIf(b);
 	}
-
+	
+	public void resetAllStacks() {
+		GlobalStack.getInstance().clear();
+		localStacks.removeAllElements();
+	}
 }

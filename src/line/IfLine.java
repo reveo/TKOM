@@ -42,7 +42,6 @@ public class IfLine extends Token implements ComplexLine {
 		stringBuffer.delete(stringBuffer.length() - 2, stringBuffer.length());
 		tokens = getAllVariables(stringBuffer);
 		outputString = stringBuffer.toString();
-		System.out.println(stringBuffer.toString());
 	}
 
 	public Vector<String> getTokens() {
@@ -89,7 +88,6 @@ public class IfLine extends Token implements ComplexLine {
 			} else if (c == ' ') {
 				if (builder.length() != 0)
 					variables.add(builder.toString());
-				System.out.println(builder.toString());
 				builder.setLength(0);
 				continue;
 			} else if (Character.isDigit(c)) {
@@ -125,7 +123,7 @@ public class IfLine extends Token implements ComplexLine {
 	}
 
 	public void error() {
-		ErrorHandler.getInstance().setError("error in  \"if\"");
+		ErrorHandler.getInstance().setError("Error in IfLine");
 		isOk = false;
 	}
 

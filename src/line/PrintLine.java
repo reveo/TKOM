@@ -87,17 +87,14 @@ public class PrintLine extends Token implements ComplexLine {
 			if (c == '=' || c == '!' || c == '<' || c == '>' || c == '('
 					|| c == ')') {
 				variables.add(builder.toString());
-				System.out.println(builder.toString());
 				builder.setLength(0);
 				continue;
 			} else if (c == ' ') {
 				variables.add(builder.toString());
-				System.out.println(builder.toString());
 				builder.setLength(0);
 				continue;
 			} else if (Character.isDigit(c)) {
 				variables.add(builder.toString());
-				System.out.println(builder.toString());
 				builder.setLength(0);
 				continue;
 			}
@@ -133,7 +130,7 @@ public class PrintLine extends Token implements ComplexLine {
 	}
 
 	public void error() {
-		ErrorHandler.getInstance().setError("error in  \"print\"");
+		ErrorHandler.getInstance().setError("Error in PrintLine");
 		isOk = false;
 	}
 

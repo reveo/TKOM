@@ -8,6 +8,7 @@ public class GlobalStack implements AbstractStack {
 
 	private static volatile GlobalStack instance = null;
 	private boolean wasIf = false;
+
 	public static GlobalStack getInstance() {
 		if (instance == null) {
 			synchronized (GlobalStack.class) {
@@ -23,19 +24,13 @@ public class GlobalStack implements AbstractStack {
 	};
 
 	public boolean checkIfVariableExists(String name) {
-		for(String key : variables.keySet()) {
-			if(key.equals(name)) return true;
+		for (String key : variables.keySet()) {
+			if (key.equals(name))
+				return true;
 		}
 		return false;
 	}
 
-	public void addVariable(String name, Variable.DataType dataType) {
-		variables.put(name, new Variable(name));
-	}
-
-	public void setVariableValue(String name) {
-
-	}
 
 	public void addVariable(String name) {
 		variables.put(new String(name), new Variable(name));
@@ -43,9 +38,9 @@ public class GlobalStack implements AbstractStack {
 
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		for(Map.Entry<String,Variable> entry : variables.entrySet()) {
+		for (Map.Entry<String, Variable> entry : variables.entrySet()) {
 			builder.append(entry.getKey() + "\n");
-	    }
+		}
 		return builder.toString();
 	}
 
@@ -55,5 +50,9 @@ public class GlobalStack implements AbstractStack {
 
 	public void setIf(boolean b) {
 		wasIf = b;
+	}
+
+	public void clear() {
+		variables = new HashMap<String, Variable>();
 	}
 }

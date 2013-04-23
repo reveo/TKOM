@@ -31,7 +31,7 @@ public class CommentLine extends Token implements AbstractLine {
 	}
 	
 	public void error() {
-		ErrorHandler.getInstance().setError("Error in comment");
+		ErrorHandler.getInstance().setError("Error in CommentLine");
 		this.isOk = false;
 	}
 }

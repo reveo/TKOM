@@ -84,12 +84,10 @@ String leftOperand;
 			} else
 				builder.append(c);
 		}
-		System.out.println(newText);
-
 	}
 
 	public void error() {
-		ErrorHandler.getInstance().setError("error in  \"ListCreateVariableLine\" loop");
+		ErrorHandler.getInstance().setError("Error in ListCreateVariableLine");
 		isOk = false;
 	}
 

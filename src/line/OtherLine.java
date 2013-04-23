@@ -68,22 +68,17 @@ public class OtherLine extends Token implements ComplexLine {
 			if (c == '=' || c == '!' || c == '<' || c == '>' || c == '('
 					|| c == ')') {
 				variables.add(builder.toString());
-				System.out.println(builder.toString());
 				builder.setLength(0);
 				continue;
 			} else if (c == ' ') {
 				variables.add(builder.toString());
-				System.out.println(builder.toString());
 				builder.setLength(0);
 				continue;
 			} else if (Character.isDigit(c)) {
 				variables.add(builder.toString());
-				System.out.println(builder.toString());
 				builder.setLength(0);
 				continue;
-			}
-
-			else {
+			} else {
 				builder.append(c);
 				if (i == stringBuffer.length() - 1) {
 					variables.add(builder.toString());
@@ -98,24 +93,17 @@ public class OtherLine extends Token implements ComplexLine {
 		builder.append("cout<<");
 		if (isBracketNeeded) {
 			builder.append("\"");
-		}
-		else {
+		} else {
 			builder.append("(");
 		}
 		builder.append(outputString);
 		if (isBracketNeeded) {
 			builder.append("\"");
-		}
-		else {
+		} else {
 			builder.append(")");
 		}
 		builder.append("<<endl;");
 		cPlusPlusWindow.setText(builder.toString(), indent);
-	}
-
-	public void error() {
-		ErrorHandler.getInstance().setError("error in  \"other\"");
-		isOk = false;
 	}
 
 	public Vector<String> getIterateVariables() {
@@ -124,5 +112,10 @@ public class OtherLine extends Token implements ComplexLine {
 
 	public void setIsBracketNeeded(boolean b) {
 		isBracketNeeded = b;
+	}
+
+	public void error() {
+		ErrorHandler.getInstance().setError("Error in OtherLine");
+		isOk = false;
 	}
 }

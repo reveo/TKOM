@@ -26,6 +26,13 @@ public class Controller {
 			mainWindow.setNewLine(nowLine);
 			ErrorHandler.getInstance().clearError();
 		}
-
+	}
+	
+	public void closeAllBrackets() {
+		parser.closeAllBrackets();
+	}
+	
+	public void resetAllStacks() {
+		parser.resetAllStacks();
 	}
 }

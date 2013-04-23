@@ -25,7 +25,6 @@ public class CreateVariableLine extends Token implements AbstractLine {
 			char c = text.charAt(i);
 			if (c == '=') {
 				text = text.delete(0, i + 1);
-				System.out.println("ZMIENNA TO " + text);
 				tokens.add(builder.toString().trim());
 			}
 			builder.append(c);
@@ -51,6 +50,6 @@ public class CreateVariableLine extends Token implements AbstractLine {
 	}
 
 	public void error() {
-		ErrorHandler.getInstance().setError("Error in CreateVariable");
+		ErrorHandler.getInstance().setError("Error in CreateVariableLine");
 	}
 }

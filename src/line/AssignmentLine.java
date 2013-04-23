@@ -2,6 +2,8 @@ package line;
 
 import java.util.Vector;
 
+import model.ErrorHandler;
+
 import view.CPlusPlusWindow;
 
 public class AssignmentLine extends Token implements AbstractLine {
@@ -48,6 +50,6 @@ public class AssignmentLine extends Token implements AbstractLine {
 	}
 	
 	public void error() {
-		
+		ErrorHandler.getInstance().setError("Error in AssignmentLine");
 	}
 }

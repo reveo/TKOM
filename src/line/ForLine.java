@@ -123,7 +123,7 @@ public class ForLine extends Token implements ComplexLine {
 	}
 
 	public void error() {
-		ErrorHandler.getInstance().setError("error in  \"for\" loop");
+		ErrorHandler.getInstance().setError("Error in ForLine");
 		isOk = false;
 	}
 }

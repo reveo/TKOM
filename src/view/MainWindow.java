@@ -1,6 +1,7 @@
 package view;
 
 import java.awt.BorderLayout;
+import java.io.File;
 
 import javax.swing.JFrame;
 
@@ -51,11 +52,26 @@ public class MainWindow extends JFrame {
 		cPlusPlusWindow.writeBracket(indent);
 	}
 	
+	public void closeAllBrackets() {
+		controller.closeAllBrackets();
+	}
 	public void setErrorText(String text) {
 		errorWindow.setErrorText(text);
 	}
 	
 	public void clearErrorText() {
 		errorWindow.clearErrorText();
+	}
+	
+	public void clearText() {
+		cPlusPlusWindow.clearText();
+	}
+	
+	public void resetAllStacks() {
+		controller.resetAllStacks();
+	}
+	
+	public void writeToFile(File file) {
+		cPlusPlusWindow.writeToFile(file);
 	}
 }

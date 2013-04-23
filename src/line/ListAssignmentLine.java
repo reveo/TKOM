@@ -81,12 +81,11 @@ public class ListAssignmentLine extends Token implements AbstractLine {
 			} else
 				builder.append(c);
 		}
-		System.out.println(newText);
 
 	}
 
 	public void error() {
-		ErrorHandler.getInstance().setError("error in  \"List Assignment Loop\" loop");
+		ErrorHandler.getInstance().setError("Error in ListAssignmentLine");
 		isOk = false;
 
 	}

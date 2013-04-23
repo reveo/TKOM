@@ -22,7 +22,7 @@ public class ElseLine extends Token implements AbstractLine {
 
 	
 	public void error() {
-		ErrorHandler.getInstance().setError("error in  \"else\" ");
+		ErrorHandler.getInstance().setError("Error in ElseLine");
 		isOk = false;
 
 	}
