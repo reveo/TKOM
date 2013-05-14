@@ -101,6 +101,11 @@ public class IfLine extends Token implements ComplexLine {
 				builder.append(c);
 			}
 		}
+
+		if (builder.length() != 0) {
+			variables.add(builder.toString());
+			builder.setLength(0);
+		}
 		return variables;
 	}
 

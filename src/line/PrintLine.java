@@ -58,6 +58,8 @@ public class PrintLine extends Token implements ComplexLine {
 		StringBuilder builder = new StringBuilder();
 		for (int i = 0; i < stringBuffer.length(); ++i) {
 			char c = stringBuffer.charAt(i);
+			if (c == '\n' || c == '\"')
+				continue;
 			if (c == 'a') {
 				int tmp = i;
 				++tmp;
@@ -85,7 +87,7 @@ public class PrintLine extends Token implements ComplexLine {
 			if (c == '&' || c == '|')
 				error();
 			if (c == '=' || c == '!' || c == '<' || c == '>' || c == '('
-					|| c == ')') {
+					|| c == ')' || c == '*' || c == '+' || c == '-' || c == '/') {
 				variables.add(builder.toString());
 				builder.setLength(0);
 				continue;

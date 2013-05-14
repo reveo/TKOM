@@ -15,7 +15,9 @@ public class ElifLine extends Token implements ComplexLine {
 		this.indent = indent;
 
 		getCondition(stringBuffer);
-		setOutput();
+
+		if (isOk())
+			setOutput();
 	}
 
 	public void getCondition(StringBuffer stringBuffer) {
@@ -97,7 +99,8 @@ public class ElifLine extends Token implements ComplexLine {
 				builder.append(c);
 			}
 		}
-		if(builder.length() != 0 ) variables.add(builder.toString());
+		if (builder.length() != 0)
+			variables.add(builder.toString());
 		return variables;
 	}
 
@@ -117,11 +120,10 @@ public class ElifLine extends Token implements ComplexLine {
 		cPlusPlusWindow.setText(builder.toString(), indent);
 	}
 
-
 	public Vector<String> getIterateVariables() {
 		return tokens;
 	}
-	
+
 	public void error() {
 		ErrorHandler.getInstance().setError("Error in ElifLine");
 		isOk = false;

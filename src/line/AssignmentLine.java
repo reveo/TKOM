@@ -34,7 +34,8 @@ public class AssignmentLine extends Token implements AbstractLine {
 		if (text.toString().endsWith(";"))
 			text.delete(text.length() - 1, text.length());
 		StringBuilder builder = new StringBuilder(text);
-		tokens.add(builder.toString().trim());
+		String value = builder.toString().trim().replaceAll("\'", "\"");
+		tokens.add(value);
 	}
 
 

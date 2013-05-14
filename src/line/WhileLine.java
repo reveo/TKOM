@@ -15,7 +15,9 @@ public class WhileLine extends Token implements ComplexLine {
 		this.indent = indent;
 
 		getCondition(stringBuffer);
-		setOutput();
+
+		if (isOk())
+			setOutput();
 	}
 
 	public void getCondition(StringBuffer stringBuffer) {
@@ -96,10 +98,15 @@ public class WhileLine extends Token implements ComplexLine {
 				builder.append(c);
 			}
 		}
+		if (builder.length() != 0) {
+			variables.add(builder.toString());
+			builder.setLength(0);
+		}
 		return variables;
 	}
 
 	public void setOutput() {
+
 		String s = new String(outputString.replaceAll("and", "&&"));
 		String s2 = new String(s.replaceAll("or", "||"));
 		outputString = s2;

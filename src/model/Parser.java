@@ -370,6 +370,9 @@ public class Parser {
 	}
 
 	public boolean checkLeftOperand(String name) {
+		
+		if(name.equalsIgnoreCase("if") || name.equalsIgnoreCase("in"))
+			return false;
 		char c = name.charAt(0);
 		if (Character.isDigit(c))
 			return false;

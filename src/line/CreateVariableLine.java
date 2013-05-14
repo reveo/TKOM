@@ -25,17 +25,25 @@ public class CreateVariableLine extends Token implements AbstractLine {
 			char c = text.charAt(i);
 			if (c == '=') {
 				text = text.delete(0, i + 1);
-				tokens.add(builder.toString().trim());
+				String newVar = builder.toString().trim();
+				if (newVar.equals("if") || newVar.equals("in")
+						|| newVar == "for" || newVar == "else"
+						|| newVar == "elif" || newVar == "print"
+						|| newVar == "while")
+					error();
+				tokens.add(newVar);
 			}
 			builder.append(c);
 		}
+
 	}
 
 	public void getValue(StringBuffer text) {
 		if (text.toString().endsWith(";"))
 			text.delete(text.length() - 1, text.length());
 		StringBuilder builder = new StringBuilder(text);
-		tokens.add(builder.toString().trim());
+		String value = builder.toString().trim().replaceAll("\'", "\"");
+		tokens.add(value);
 	}
 
 	public boolean isOk() {
@@ -51,5 +59,6 @@ public class CreateVariableLine extends Token implements AbstractLine {
 
 	public void error() {
 		ErrorHandler.getInstance().setError("Error in CreateVariableLine");
+		isOk = false;
 	}
 }

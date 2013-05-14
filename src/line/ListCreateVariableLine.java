@@ -8,8 +8,8 @@ import view.CPlusPlusWindow;
 
 public class ListCreateVariableLine extends Token implements AbstractLine {
 
-String leftOperand;
-	
+	String leftOperand;
+
 	public ListCreateVariableLine(String text, int indent) {
 		tokens = new Vector<String>();
 		StringBuffer stringBuffer = new StringBuffer(text);
@@ -26,17 +26,16 @@ String leftOperand;
 	public void writeLine(CPlusPlusWindow cPlusPlusWindow) {
 		StringBuilder builder = new StringBuilder();
 		builder.append("string tmp[]= {");
-		for (int i = 0; i < tokens.size()-1; ++i)
+		for (int i = 0; i < tokens.size() - 1; ++i)
 			builder.append("\"" + tokens.elementAt(i) + "\"" + ",");
 		builder.append("\"" + tokens.lastElement() + "\"");
 		builder.append("};");
 		cPlusPlusWindow.setText(builder.toString(), indent);
-		
+
 		builder.setLength(0);
-		
+
 		builder.append("Variable " + leftOperand + "(tmp);");
-		
-	
+
 		cPlusPlusWindow.setText(builder.toString(), indent);
 	}
 
@@ -51,6 +50,7 @@ String leftOperand;
 		}
 		return "";
 	}
+
 	public void getTokens(StringBuffer text) {
 		int i = 0;
 		for (; i < text.length(); ++i) {
@@ -73,7 +73,7 @@ String leftOperand;
 		StringBuilder builder = new StringBuilder();
 		for (int j = 0; j < newText.length(); ++j) {
 			char c = newText.charAt(j);
-			if (c == ' ')
+			if (c == ' ' || c == '\"' || c == '\'')
 				continue;
 			else if (c == ',') {
 				if (builder.length() != 0)
@@ -84,6 +84,8 @@ String leftOperand;
 			} else
 				builder.append(c);
 		}
+		if (builder.length() != 0)
+			tokens.add(builder.toString());
 	}
 
 	public void error() {
