@@ -130,5 +130,4 @@ public class WhileLine extends Token implements ComplexLine {
 		ErrorHandler.getInstance().setError("Error in WhileLine");
 		isOk = false;
 	}
-
 }

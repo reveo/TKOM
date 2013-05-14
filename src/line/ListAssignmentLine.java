@@ -26,8 +26,8 @@ public class ListAssignmentLine extends Token implements AbstractLine {
 		StringBuilder builder = new StringBuilder();
 		builder.append("string tmp[]= {");
 		for (int i = 0; i < tokens.size() - 1; ++i)
-			builder.append("\"" + tokens.elementAt(i) + "\"" + ",");
-		builder.append("\"" + tokens.lastElement() + "\"");
+			builder.append("\'" + tokens.elementAt(i) + "\'" + ",");
+		builder.append("\'" + tokens.lastElement() + "\'");
 		builder.append("};");
 		cPlusPlusWindow.setText(builder.toString(), indent);
 

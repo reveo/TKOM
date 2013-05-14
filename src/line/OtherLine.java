@@ -33,7 +33,7 @@ public class OtherLine extends Token implements ComplexLine {
 		stringBuffer = new StringBuffer(text);
 		outputString = stringBuffer.toString();
 	}
-
+	
 	public Vector<String> getAllVariables(StringBuffer stringBuffer) {
 		Vector<String> variables = new Vector<String>();
 		StringBuilder builder = new StringBuilder();

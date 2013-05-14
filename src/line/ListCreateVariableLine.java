@@ -34,7 +34,7 @@ public class ListCreateVariableLine extends Token implements AbstractLine {
 
 		builder.setLength(0);
 
-		builder.append("Variable " + leftOperand + "(tmp);");
+		builder.append("Variable " + leftOperand + "(tmp,sizeof(tmp)/sizeof(tmp[0]));");
 
 		cPlusPlusWindow.setText(builder.toString(), indent);
 	}
