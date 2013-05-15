@@ -175,6 +175,38 @@ const bool operator>(const Variable& v1, const Variable& v2)
         true;
 }
 
+const bool operator<=(const Variable& v1, const Variable& v2)
+{
+    if(v1.getFlague() == NUM && v2.getFlague() == NUM)
+        return (v1.getIntValue() < v2.getIntValue());
+    else return
+        true;
+}
+
+const bool operator>=(const Variable& v1, const Variable& v2)
+{
+    if(v1.getFlague() == NUM && v2.getFlague() == NUM)
+        return (v1.getIntValue() > v2.getIntValue());
+    else return
+        true;
+}
+
+const bool operator!=(const Variable& v1, const Variable& v2)
+{
+  if(v1.getFlague() == NUM && v2.getFlague() == NUM)
+        return (v1.getIntValue() != v2.getIntValue());
+    else return
+        true;
+}
+
+const bool operator==(const Variable& v1, const Variable& v2)
+{
+  if(v1.getFlague() == NUM && v2.getFlague() == NUM)
+        return (v1.getIntValue() == v2.getIntValue());
+    else return
+        false;
+}
+
 const int operator+(const Variable& v1, const Variable& v2)
 {
     if(v1.getFlague() == NUM && v2.getFlague() == NUM)
@@ -206,10 +238,28 @@ const int operator/(const Variable& v1, const Variable& v2)
     else
         return 2;
 }
+
+
+bool operator&&(const Variable& v1, const Variable& v2)
+{
+    if(v1.getFlague() == NUM && v2.getFlague() == NUM)
+        return (v1.getIntValue() && v2.getIntValue());
+    else
+        return false;
+}
+
+
+bool operator||(const Variable& v1, const Variable& v2)
+{
+    if(v1.getFlague() == NUM && v2.getFlague() == NUM)
+        return (v1.getIntValue() || v2.getIntValue());
+    else
+        return true;
+}
 int main()
 {
     Variable a(5);
     Variable b("Abc");
-    if((a+5)>5)
+    if(5||b)
         cout<<"HELLO";
 }
