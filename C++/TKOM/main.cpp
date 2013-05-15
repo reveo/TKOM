@@ -174,7 +174,42 @@ const bool operator>(const Variable& v1, const Variable& v2)
     else return
         true;
 }
+
+const int operator+(const Variable& v1, const Variable& v2)
+{
+    if(v1.getFlague() == NUM && v2.getFlague() == NUM)
+        return (v1.getIntValue() + v2.getIntValue());
+    else
+        return 2;
+}
+
+const int operator-(const Variable& v1, const Variable& v2)
+{
+    if(v1.getFlague() == NUM && v2.getFlague() == NUM)
+        return (v1.getIntValue() -v2.getIntValue());
+    else
+        return 0;
+}
+
+const int operator*(const Variable& v1, const Variable& v2)
+{
+    if(v1.getFlague() == NUM && v2.getFlague() == NUM)
+        return (v1.getIntValue() * v2.getIntValue());
+    else
+        return 2;
+}
+
+const int operator/(const Variable& v1, const Variable& v2)
+{
+    if(v1.getFlague() == NUM && v2.getFlague() == NUM)
+        return (v1.getIntValue() / v2.getIntValue());
+    else
+        return 2;
+}
 int main()
 {
-
+    Variable a(5);
+    Variable b("Abc");
+    if((a+5)>5)
+        cout<<"HELLO";
 }
