@@ -258,8 +258,4 @@ bool operator||(const Variable& v1, const Variable& v2)
 }
 int main()
 {
-    Variable a(5);
-    Variable b("Abc");
-    if(5||b)
-        cout<<"HELLO";
-}
+

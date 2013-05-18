@@ -523,5 +523,6 @@ public class Parser {
 	public void resetAllStacks() {
 		GlobalStack.getInstance().clear();
 		localStacks.removeAllElements();
+		expectedIndent = 0;
 	}
 }

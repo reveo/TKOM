@@ -1,11 +1,14 @@
 package view;
 
 import java.awt.Dimension;
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.DataInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
-
+import java.io.InputStreamReader;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -57,8 +60,17 @@ public class CPlusPlusWindow extends JPanel {
 	
 	public void writeToFile(File file) {
 		try {
+			FileInputStream stream = new FileInputStream(new File("C++/TKOM/main.cpp"));
+			DataInputStream fstream = new DataInputStream(stream);
+			BufferedReader reader = new BufferedReader(new InputStreamReader(fstream));
 			BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+			String stringLine;
+			while ((stringLine = reader.readLine()) != null) {
+				writer.write(stringLine);
+				writer.write("\n");
+			}
 			writer.write(textArea.getText());
+			writer.write("\n} \n \n");
 			writer.close();
 		} catch (IOException e) {
 			e.printStackTrace();

@@ -28,18 +28,7 @@ public class IfLine extends Token implements ComplexLine {
 
 		stringBuffer.delete(0, 2);
 		stringBuffer = new StringBuffer(stringBuffer.toString().trim());
-		if (!stringBuffer.toString().startsWith("(")) {
-			error();
-			return;
-		}
-
-		if (!stringBuffer.toString().endsWith("):")) {
-			error();
-			return;
-		}
-
-		stringBuffer.delete(0, 1);
-		stringBuffer.delete(stringBuffer.length() - 2, stringBuffer.length());
+		stringBuffer.delete(stringBuffer.length() - 1, stringBuffer.length());
 		tokens = getAllVariables(stringBuffer);
 		outputString = stringBuffer.toString();
 	}

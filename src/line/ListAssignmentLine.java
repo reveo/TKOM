@@ -8,7 +8,6 @@ import view.CPlusPlusWindow;
 
 public class ListAssignmentLine extends Token implements AbstractLine {
 	String leftOperand;
-
 	public ListAssignmentLine(String text, int indent) {
 		tokens = new Vector<String>();
 		StringBuffer stringBuffer = new StringBuffer(text);
@@ -32,7 +31,7 @@ public class ListAssignmentLine extends Token implements AbstractLine {
 		cPlusPlusWindow.setText(builder.toString(), indent);
 
 		builder.setLength(0);
-		builder.append(leftOperand + ".setValue" + "(tmp);");
+		builder.append(leftOperand + ".setValue" + "(tmp,sizeof(tmp)/sizeof(tmp[0]));");
 
 		cPlusPlusWindow.setText(builder.toString(), indent);
 	}
