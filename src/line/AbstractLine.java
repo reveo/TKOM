@@ -6,5 +6,5 @@ public interface AbstractLine {
 	String toString();		
 	public boolean isOk();
 	public void writeLine(CPlusPlusWindow cPlusPlusWindow);
-	public void error();
+	public void error();	
 }

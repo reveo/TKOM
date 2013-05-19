@@ -1,0 +1,1 @@
+while 4 && 5:		//Niepoprawny operand złączenia  - "&&" zamiast "and"

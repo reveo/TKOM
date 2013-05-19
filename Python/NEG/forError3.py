@@ -1,0 +1,1 @@
+for i in range[43,2]: 		//Błędny zakres (druga liczba mniejsza od pierwszej)

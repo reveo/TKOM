@@ -1,0 +1,1 @@
+elif(3<5):		//Brak warunku if przed wykorzystaniem warunku elif
