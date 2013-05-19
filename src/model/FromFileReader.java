@@ -40,7 +40,6 @@ public class FromFileReader {
 			char c = text.charAt(i);
 			if(c == '\t') number++; 
 		}
-		System.out.println(number);
 		return number;
 	}
 }

@@ -138,6 +138,13 @@ class Variable
             return *this;
         }
     friend ostream& operator<<(ostream& os, const Variable&);
+    operator bool()
+    {
+        if(flag == NUM)
+            return (intValue != 0);
+        else return true;
+
+    }
     private:
         Type flag; //if flag == true, then object is numeric, otherwise is text
         int intValue;
@@ -258,4 +265,7 @@ bool operator||(const Variable& v1, const Variable& v2)
 }
 int main()
 {
+    Variable a(5);
+    while(a)
+        cout<<"HELLO"<<endl;
 
