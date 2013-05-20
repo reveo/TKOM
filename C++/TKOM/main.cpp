@@ -26,7 +26,7 @@ class Variable
             }
         }
 
-        Variable(int v)
+        explicit Variable(int v)
         {
             intValue = v;
             flag = NUM;
@@ -225,7 +225,7 @@ const int operator+(const Variable& v1, const Variable& v2)
 const int operator-(const Variable& v1, const Variable& v2)
 {
     if(v1.getFlague() == NUM && v2.getFlague() == NUM)
-        return (v1.getIntValue() -v2.getIntValue());
+        return (v1.getIntValue() - v2.getIntValue());
     else
         return 0;
 }
@@ -265,7 +265,4 @@ bool operator||(const Variable& v1, const Variable& v2)
 }
 int main()
 {
-    Variable a(5);
-    while(a)
-        cout<<"HELLO"<<endl;
 
