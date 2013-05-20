@@ -2,6 +2,12 @@ a = 5;
 b = ['abc',5,'6'];
 if a<b:
 	print(a);
+	if a == b:
+		print(b);
+	elif a<b:
+		print(a);
+	else
+		print("HELLO");
 elif a == b:
 	print("ROWNE");
 else 
